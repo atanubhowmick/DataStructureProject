@@ -1,7 +1,7 @@
 /**
  * 
  */
-package dev.atanu.ds.array.search;
+package dev.atanu.ds.java.array.search;
 
 import java.util.Scanner;
 

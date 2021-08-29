@@ -1,7 +1,7 @@
 /**
  * 
  */
-package dev.atanu.ds.linked.list;
+package dev.atanu.ds.java.linked.list;
 
 /**
  * @author Atanu Bhowmick
@@ -17,6 +17,13 @@ public class LinkedListTest {
 		myLinkedList.add(4);
 
 		System.out.println(myLinkedList.getCount());
+		myLinkedList.print();
+		System.out.println(myLinkedList.get(2));
+		
+		myLinkedList.add(20, 2);
+		myLinkedList.print();
+		
+		myLinkedList.remove(3);
 		myLinkedList.print();
 	}
 }

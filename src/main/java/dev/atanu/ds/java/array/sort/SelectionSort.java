@@ -1,7 +1,7 @@
 /**
  * 
  */
-package dev.atanu.ds.array.sort;
+package dev.atanu.ds.java.array.sort;
 
 /**
  * @author Atanu Bhowmick
