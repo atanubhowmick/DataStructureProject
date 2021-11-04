@@ -3,6 +3,8 @@
  */
 package dev.atanu.ds.java.array.sort;
 
+import java.util.Arrays;
+
 /**
  * @author Atanu Bhowmick
  *
@@ -12,6 +14,7 @@ public class SelectionSort {
 	public static void main(String[] args) {
 		int[] arr = { 32, 51, 27, 85, 66, 24, 14, 57, 48 };
 		sort(arr);
+		System.out.println(Arrays.toString(arr));
 	}
 
 	public static void sort(int[] arr) {
@@ -23,10 +26,6 @@ public class SelectionSort {
 					arr[j] = temp;
 				}
 			}
-		}
-
-		for (int i = 0; i < arr.length; i++) {
-			System.out.print(arr[i] + "  ");
 		}
 	}
 }
