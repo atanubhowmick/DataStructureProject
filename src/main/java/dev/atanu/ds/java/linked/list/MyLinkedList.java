@@ -47,7 +47,7 @@ public class MyLinkedList<T> {
 	 * @param data
 	 */
 	public void add(T data) {
-		Node<T> node = new Node<T>(data);
+		Node<T> node = new Node<>(data);
 		Node<T> current = head;
 		if (current == null) {
 			this.head = node;
@@ -70,7 +70,7 @@ public class MyLinkedList<T> {
 		if (index < 0 || index > count) {
 			throw new IllegalArgumentException(INVALID_INDEX);
 		}
-		Node<T> node = new Node<T>(data);
+		Node<T> node = new Node<>(data);
 		Node<T> current = head;
 		if (index == 0) {
 			this.head = node;
@@ -91,7 +91,7 @@ public class MyLinkedList<T> {
 	public void remove() {
 		Node<T> current = head;
 		if (current == null) {
-			System.out.println("Can't remove. Empty list");
+			throw new IllegalArgumentException("Can't remove. Empty list");
 		} else if (this.count == 1) {
 			this.head = null;
 			count -= 1;

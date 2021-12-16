@@ -18,7 +18,7 @@ public class StackUsingLinkedList<T> {
 	}
 
 	public void push(T data) {
-		Node<T> node = new Node<T>(data);
+		Node<T> node = new Node<>(data);
 		Node<T> current = head;
 		if(current == null) {
 			head = node;
