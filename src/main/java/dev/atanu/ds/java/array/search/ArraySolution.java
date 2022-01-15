@@ -1,17 +1,20 @@
 package dev.atanu.ds.java.array.search;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 
 public class ArraySolution {
 
 	public static void main(String[] args) {
 		ArraySolution solution = new ArraySolution();
-		int[][] arr = solution
-				.reconstructQueue(new int[][] { { 5, 0 }, { 7, 0 }, { 5, 2 }, { 6, 1 }, { 4, 4 }, { 7, 1 } });
-		System.out.println(arr);
+		int[] nums = new int[] {3, 2, 3};
+		List<Integer> list = solution.majorityElement(nums);
+		System.out.println(list);
 	}
 
 	/**
@@ -70,5 +73,31 @@ public class ArraySolution {
 		}
 		return list.toArray(new int[list.size()][]);
 	}
+	
+	/**
+	 * https://leetcode.com/problems/majority-element-ii/description/
+	 * 
+	 * @param nums
+	 * @return
+	 */
+	public List<Integer> majorityElement(int[] nums) {
+        int n = nums.length;
+        Map<Integer, Integer> map = new HashMap<>();
+        for(int num: nums) {
+            if(map.containsKey(num)) {
+                map.put(num, map.get(num) + 1);
+            } else {
+                map.put(num, 1);
+            }
+        }
+        
+        List<Integer> list = new ArrayList<>();
+        for(Map.Entry<Integer, Integer> entry : map.entrySet()) {
+            if(entry.getValue() > n/3) {
+                list.add(entry.getKey());
+            }
+        }
+        return list;
+    }
 
 }

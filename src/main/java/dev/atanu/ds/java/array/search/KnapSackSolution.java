@@ -90,7 +90,7 @@ public class KnapSackSolution {
 				if (i == 0 || j == 0)
 					dp[i][j] = 0;
 				else if (wt[i - 1] <= j)
-					dp[i][j] = Math.max(val[i - 1] + dp[i - 1][j - wt[i - 1]], dp[i - 1][j]);
+					dp[i][j] = Math.max((val[i - 1] + dp[i - 1][j - wt[i - 1]]), dp[i - 1][j]);
 				else
 					dp[i][j] = dp[i - 1][j];
 			}
@@ -108,10 +108,11 @@ public class KnapSackSolution {
 	 */
 	public int knapSackFinal(int maxWt, int[] wt, int[] val, int n) {
 		int[] dp = new int[maxWt + 1];
-		for (int i = 1; i < n + 1; i++) {
-			for (int w = maxWt; w >= 0; w--) {
-				if (wt[i - 1] <= w) {
-					dp[w] = Math.max(dp[w], dp[w - wt[i - 1]] + val[i - 1]);
+		for (int i = 1; i <= n; i++) {
+			for (int j = maxWt; j >= 0; j--) {
+				if (wt[i - 1] <= j) {
+					// Single row and handle the previous row data if we start from end
+					dp[j] = Math.max((val[i - 1] + dp[j - wt[i - 1]]), dp[j]);
 				}
 			}
 		}
