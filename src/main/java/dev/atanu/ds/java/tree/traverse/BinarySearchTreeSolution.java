@@ -20,14 +20,8 @@ public class BinarySearchTreeSolution {
 	public static void main(String[] args) {
 		BinarySearchTreeSolution solution = new BinarySearchTreeSolution();
 		TreeNode root = solution.createTree();
-		//System.out.println(solution.isValidBST(root));
-		//System.out.println(solution.isValidBSTUsingRecurssion(root));
-		//System.out.println("Count of BTSs : " + solution.numOfBST(6));
-		//solution.generateTrees(4);
-		TreeNode node = solution.sortedArrayToBST(new int[] {4, 8, 12, 15, 20, 25, 30});
-		//System.out.println("Is balanced tree : " + solution.isBalanced(node));
-		//solution.invertTree(node);
-		solution.bstFromPreorder(new int[] {8, 5, 1, 7, 10, 12});
+		TreeNode node = solution.removeLeafNodes(root, 3);
+		System.out.println(node);
 	}
 	
 	/**
@@ -336,6 +330,77 @@ public class BinarySearchTreeSolution {
         return val < root.val ? searchBST(root.left, val) : 
                     searchBST(root.right, val);
     }
+    
+    /**
+     * https://leetcode.com/problems/delete-leaves-with-a-given-value/
+     * 
+     * @param root
+     * @param target
+     * @return TreeNode
+     */
+    public TreeNode removeLeafNodes(TreeNode root, int target) {
+        if(root == null) {
+            return null;
+        }
+        // Do a post order traversal. Remove from the last level. Then go up.
+        TreeNode left = removeLeafNodes(root.left,target);
+        TreeNode right = removeLeafNodes(root.right,target);
+        if(left == null && right == null && root.val == target) {
+            return null;
+        }
+        root.left = left;
+        root.right = right;
+        return root;
+    }
+    
+    /**
+     * https://leetcode.com/problems/binary-tree-pruning/submissions/
+     * 
+     * @param root
+     * @return root
+     */
+    public TreeNode pruneTree(TreeNode root) {
+        if(root == null) {
+            return null;
+        }
+        TreeNode left = pruneTree(root.left);
+        TreeNode right = pruneTree(root.right);
+        
+        if(left == null && right == null && root.val != 1) {
+            return null;
+        }
+        root.left = left;
+        root.right = right;
+        return root;
+    }
+    
+    /**
+     * https://leetcode.com/problems/distribute-coins-in-binary-tree/
+     * 
+     * @param root
+     * @return steps
+     */
+    public int distributeCoins(TreeNode root) {
+        postorder(root);
+        return steps;
+    }
+    
+    private int steps = 0; 
+    
+    // return coins of this level
+    private int postorder(TreeNode node) {
+        if(node == null) return 0;
+        
+        // coin from children -- post-order traversal
+        int coin = postorder(node.left) + postorder(node.right);
+    	
+        // current node coin
+        if(node.val == 0) coin += -1; // current node need one coin
+        else coin += node.val - 1; // keep one coin for current node
+        
+        steps += Math.abs(coin); // each coin move up to parent node need 1 step
+        return coin; 
+    }
 
 
 	/**
@@ -345,9 +410,9 @@ public class BinarySearchTreeSolution {
 	 * <br>         / \
 	 * <br>        10  30
 	 * <br>       /   / \
-	 * <br>      5   25  35
+	 * <br>      5   25  3
 	 * <br>     / \       \
-	 * <br>    3   8      40
+	 * <br>    3   8       3
 	 *     
 	 * @return root
 	 */
@@ -368,11 +433,11 @@ public class BinarySearchTreeSolution {
 		left2.setRight(right3);
 		
 		TreeNode left4 = new TreeNode(25);
-		TreeNode right4 = new TreeNode(35);
+		TreeNode right4 = new TreeNode(3);
 		right1.setLeft(left4);
 		right1.setRight(right4);
 		
-		TreeNode right5 = new TreeNode(40);
+		TreeNode right5 = new TreeNode(3);
 		right4.setRight(right5);
 		
 		return root;

@@ -68,10 +68,11 @@ public class KnapSackSolution {
 		if (dp[n][maxWt] != -1)
 			return dp[n][maxWt];
 		if (wt[n - 1] > maxWt)
-			return dp[n][maxWt] = knapSackRec(maxWt, wt, val, n - 1, dp);
+			dp[n][maxWt] = knapSackRec(maxWt, wt, val, n - 1, dp);
 		else
-			return dp[n][maxWt] = Math.max((val[n - 1] + knapSackRec(maxWt - wt[n - 1], wt, val, n - 1, dp)),
+			dp[n][maxWt] = Math.max((val[n - 1] + knapSackRec(maxWt - wt[n - 1], wt, val, n - 1, dp)),
 					knapSackRec(maxWt, wt, val, n - 1, dp));
+		return dp[n][maxWt];
 	}
 
 	/**
