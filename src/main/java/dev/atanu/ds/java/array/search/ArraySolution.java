@@ -15,12 +15,10 @@ import java.util.stream.Collectors;
 public class ArraySolution {
 
 	public static void main(String[] args) {
+		int[] arr = new int[] { 3, 2, 4, 1 };
 		ArraySolution solution = new ArraySolution();
-		int[] arr = solution.rearrangeArray(
-				new int[] { 28, -41, 22, -8, -37, 46, 35, -9, 18, -6, 19, -26, -37, -10, -9, 15, 14, 31 });
-		for(int i : arr) {
-			System.out.print(i + " ");
-		}
+		List<Integer> list= solution.pancakeSort(arr);
+		System.out.println(list);
 	}
 
 	/**
@@ -54,7 +52,7 @@ public class ArraySolution {
 	public int[] dailyTemperatures(int[] temperatures) {
 		int n = temperatures.length;
 		int[] result = new int[n];
-		Stack<Integer> stack = new Stack<Integer>();
+		Stack<Integer> stack = new Stack<>();
 		for (int i = 0; i < n; i++) {
 			while (!stack.isEmpty() && temperatures[stack.peek()] < temperatures[i]) {
 				int prevIndex = stack.pop();
@@ -609,4 +607,192 @@ public class ArraySolution {
 		arr[i] = arr[j];
 		arr[j] = temp;
 	}
+
+	/**
+	 * https://leetcode.com/problems/kth-largest-element-in-an-array/
+	 * 
+	 * @param nums
+	 * @param k
+	 * @return
+	 */
+	public int findKthLargestQuickSelect(int[] nums, int k) {
+		int searchIdx = nums.length - k;
+		int start = 0, end = nums.length - 1;
+		while (start < end) {
+			int pivotIdx = partition(nums, start, end);
+			if (pivotIdx == searchIdx) {
+				return nums[pivotIdx];
+			} else if (pivotIdx > searchIdx) {
+				end = pivotIdx - 1;
+			} else {
+				start = pivotIdx + 1;
+			}
+		}
+		return nums[start];
+	}
+
+	private int partition(int[] nums, int left, int right) {
+		int pivot = nums[left], low = left, high = right;
+		while (left < right) {
+			while (left < high && pivot >= nums[left]) {
+				left++;
+			}
+			while (low < right && pivot <= nums[right]) {
+				right--;
+			}
+			if (left < right) {
+				swap(nums, left, right);
+			}
+		}
+		swap(nums, low, right);
+		return right;
+	}
+
+	/**
+	 * 
+	 * @param nums
+	 */
+	public void nextPermutation(int[] nums) {
+		int pivot = indexOfLastPeak(nums) - 1;
+		if (pivot != -1) {
+			int nextPrefix = lastIndexOfGreater(nums, nums[pivot]);
+			swap(nums, pivot, nextPrefix);
+		}
+		reverse(nums, pivot + 1, nums.length - 1);
+	}
+
+	private int indexOfLastPeak(int[] nums) {
+		for (int i = nums.length - 1; 0 < i; --i) {
+			if (nums[i - 1] < nums[i])
+				return i;
+		}
+		return 0;
+	}
+
+	private int lastIndexOfGreater(int[] nums, int threshold) {
+		for (int i = nums.length - 1; 0 <= i; --i) {
+			if (threshold < nums[i])
+				return i;
+		}
+		return -1;
+	}
+
+	private void reverse(int[] nums, int start, int end) {
+		while (start < end) {
+			swap(nums, start++, end--);
+		}
+	}
+
+	/**
+	 * https://leetcode.com/problems/largest-odd-number-in-string/
+	 * 
+	 * @param num
+	 * @return
+	 */
+	public String largestOddNumber(String num) {
+		for (int i = num.length() - 1; i >= 0; i--) {
+			if (num.charAt(i) % 2 != 0) {
+				System.out.println(num.charAt(i) % 2);
+				return num.substring(0, i + 1);
+			}
+		}
+		return "";
+	}
+	
+	/**
+	 * https://leetcode.com/problems/longest-palindrome/
+	 * 
+	 * @param s
+	 * @return
+	 */
+	public String longestPalindrome(String s) {
+		if (s == null || s.isEmpty()) {
+			return "";
+		}
+
+		int start = 0;
+		int end = 0;
+
+		for (int i = 0; i < s.length(); i++) {
+			int len1 = expandFromMiddle(s, i, i);
+			int len2 = expandFromMiddle(s, i, i + 1);
+			int len = Math.max(len1, len2);
+			if (len > end - start) {
+				start = i - ((len - 1) / 2);
+				end = i + (len / 2);
+			}
+		}
+		return s.substring(start, end + 1);
+	}
+
+	private int expandFromMiddle(String s, int left, int right) {
+		if (s == null || left > right) {
+			return 0;
+		}
+
+		while (left >= 0 && right < s.length() && s.charAt(left) == s.charAt(right)) {
+			left--;
+			right++;
+		}
+		return right - left - 1;
+	}
+	
+	/**
+	 * https://leetcode.com/problems/pancake-sorting/
+	 * 
+	 * @param arr
+	 * @return list
+	 */
+	public List<Integer> pancakeSort(int[] arr) {
+        List<Integer> list = new ArrayList<>();
+        for(int i = arr.length - 1; i > 0; i--) {
+            if(i + 1 != arr[i]) {
+                int maxIndex = findMaxIndex(arr, 0, i);
+                reverse(arr, 0, maxIndex);
+                if(maxIndex > 0) {
+                	list.add(maxIndex + 1);	
+                }
+                reverse(arr, 0, i);
+                list.add(i + 1);
+                
+            }
+        }
+        return list;
+    }
+    
+    private int findMaxIndex(int[] arr, int start, int end) {
+        int maxIndex = start;
+        for(int i = start; i <= end; i++) {
+            if(arr[maxIndex] < arr[i]) {
+                maxIndex = i;
+            }
+        }
+        return maxIndex;
+    }
+    
+    /**
+     * https://leetcode.com/problems/max-area-of-island/
+     * 
+     * @param grid
+     * @return
+     */
+    public int maxAreaOfIsland(int[][] grid) {
+        int maxArea = 0;
+        for(int i = 0; i < grid.length; i++) {
+            for(int j = 0; j < grid[0].length; j++) {
+                if(grid[i][j] == 1) {
+                	maxArea = Math.max(maxArea, areaOfIsland(grid, i, j));
+                }
+            }
+        }
+        return maxArea;
+    }
+    
+    private int areaOfIsland(int[][] grid, int i, int j){
+        if( i >= 0 && i < grid.length && j >= 0 && j < grid[0].length && grid[i][j] == 1){
+            grid[i][j] = 0;
+            return 1 + areaOfIsland(grid, i+1, j) + areaOfIsland(grid, i-1, j) + areaOfIsland(grid, i, j-1) + areaOfIsland(grid, i, j+1);
+        }
+        return 0;
+    }
 }

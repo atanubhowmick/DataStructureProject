@@ -10,8 +10,9 @@ public class BinaryTreeSolution {
 
 	public static void main(String[] args) {
 		BinaryTreeSolution solution = new BinaryTreeSolution();
-		TreeNode node = solution.bstFromPreorder(new int[] { 8, 5, 1, 7, 10, 12 });
-		System.out.println(node);
+		List<Integer> list = new ArrayList<Integer>();
+		solution.dfsPostorder(solution.createTree(), list);
+		System.out.println(list);
 	}
 
 	/**
@@ -279,25 +280,43 @@ public class BinaryTreeSolution {
 		}
 		return true;
 	}
+	
+	/**
+	 * https://leetcode.com/problems/maximum-difference-between-node-and-ancestor/
+	 * 
+	 * @param root
+	 * @return
+	 */
+	public int maxAncestorDiff(TreeNode root) {
+        return inorder(root, root.val, root.val);
+    }
+    
+	private int inorder(TreeNode node, int min, int max) {
+        if(node == null) {
+            return max - min;
+        }
+        min = Math.min(node.val, min);
+        max = Math.max(node.val, max);
+        return Math.max(inorder(node.left, min, max), inorder(node.right, min, max));
+    }
     
 	/**
 	 * The tree is like this
 	 * 
-	 * <br>
-	 * 15 <br>
-	 * / \ <br>
-	 * 2 6 <br>
-	 * / / \ <br>
-	 * 3 11 8 <br>
-	 * / \ \ <br>
-	 * 10 5 9
+	 *      15
+	 *      / \
+	 *     4   6
+	 *    /   / \
+	 *   3   11  8
+	 *  / \       \
+	 * 10  5       9
 	 * 
 	 * @return root
 	 */
 	private TreeNode createTree() {
 		TreeNode root = new TreeNode(15);
 
-		TreeNode left1 = new TreeNode(2);
+		TreeNode left1 = new TreeNode(4);
 		TreeNode right1 = new TreeNode(6);
 		root.setLeft(left1);
 		root.setRight(right1);

@@ -4,7 +4,7 @@
 package dev.atanu.ds.java.dynamic.programming;
 
 /**
- * @author ATANU
+ * @author Atanu Bhowmick
  *
  */
 public class DpSolution {
