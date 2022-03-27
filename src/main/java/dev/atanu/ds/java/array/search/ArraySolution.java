@@ -2,6 +2,7 @@ package dev.atanu.ds.java.array.search;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -12,13 +13,16 @@ import java.util.Set;
 import java.util.Stack;
 import java.util.stream.Collectors;
 
+import dev.atanu.ds.java.linked.list.ListNode;
+
 public class ArraySolution {
 
 	public static void main(String[] args) {
-		int[] arr = new int[] { 3, 2, 4, 1 };
+		int[][] arr1 = new int[][] { { 2, 3 }, { 6, 3 }, { 7, 5 }, { 11, 3 }, { 15, 2 }, { 18, 1 } };
+		int[] arr2 = new int[] { 2 };
 		ArraySolution solution = new ArraySolution();
-		List<Integer> list= solution.pancakeSort(arr);
-		System.out.println(list);
+		double kthSmallest = solution.averageWaitingTime(arr1);
+		System.out.println(kthSmallest);
 	}
 
 	/**
@@ -28,19 +32,45 @@ public class ArraySolution {
 	 * @return
 	 */
 	public int[] nextGreaterElements(int[] nums) {
-		int n = nums.length, next[] = new int[n];
+		int n = nums.length;
+		int[] next = new int[n];
 		Arrays.fill(next, -1);
 		Stack<Integer> stack = new Stack<>();
 		for (int i = 0; i < n * 2; i++) {
 			int num = nums[i % n];
 			while (!stack.isEmpty() && nums[stack.peek()] < num) {
-				next[stack.pop()] = num;
+				int prevIndex = stack.pop();
+				next[prevIndex] = num;
 			}
 			if (i < n) {
 				stack.push(i);
 			}
 		}
 		return next;
+	}
+
+	/**
+	 * https://leetcode.com/problems/next-greater-node-in-linked-list/
+	 * 
+	 * @param head
+	 * @return
+	 */
+	public int[] nextLargerNodes(ListNode head) {
+		List<Integer> list = new ArrayList<>();
+		while (head != null) {
+			list.add(head.val);
+			head = head.next;
+		}
+		int[] arr = new int[list.size()];
+		Stack<Integer> stack = new Stack<>();
+		for (int i = 0; i < list.size(); i++) {
+			while (!stack.isEmpty() && list.get(stack.peek()) < list.get(i)) {
+				int prevIndex = stack.pop();
+				arr[prevIndex] = list.get(i);
+			}
+			stack.push(i);
+		}
+		return arr;
 	}
 
 	/**
@@ -698,7 +728,7 @@ public class ArraySolution {
 		}
 		return "";
 	}
-	
+
 	/**
 	 * https://leetcode.com/problems/longest-palindrome/
 	 * 
@@ -736,7 +766,7 @@ public class ArraySolution {
 		}
 		return right - left - 1;
 	}
-	
+
 	/**
 	 * https://leetcode.com/problems/pancake-sorting/
 	 * 
@@ -744,55 +774,342 @@ public class ArraySolution {
 	 * @return list
 	 */
 	public List<Integer> pancakeSort(int[] arr) {
-        List<Integer> list = new ArrayList<>();
-        for(int i = arr.length - 1; i > 0; i--) {
-            if(i + 1 != arr[i]) {
-                int maxIndex = findMaxIndex(arr, 0, i);
-                reverse(arr, 0, maxIndex);
-                if(maxIndex > 0) {
-                	list.add(maxIndex + 1);	
-                }
-                reverse(arr, 0, i);
-                list.add(i + 1);
-                
+		List<Integer> list = new ArrayList<>();
+		for (int i = arr.length - 1; i > 0; i--) {
+			if (i + 1 != arr[i]) {
+				int maxIndex = findMaxIndex(arr, 0, i);
+				reverse(arr, 0, maxIndex);
+				if (maxIndex > 0) {
+					list.add(maxIndex + 1);
+				}
+				reverse(arr, 0, i);
+				list.add(i + 1);
+
+			}
+		}
+		return list;
+	}
+
+	private int findMaxIndex(int[] arr, int start, int end) {
+		int maxIndex = start;
+		for (int i = start; i <= end; i++) {
+			if (arr[maxIndex] < arr[i]) {
+				maxIndex = i;
+			}
+		}
+		return maxIndex;
+	}
+
+	/**
+	 * https://leetcode.com/problems/max-area-of-island/
+	 * 
+	 * @param grid
+	 * @return
+	 */
+	public int maxAreaOfIsland(int[][] grid) {
+		int maxArea = 0;
+		for (int i = 0; i < grid.length; i++) {
+			for (int j = 0; j < grid[0].length; j++) {
+				if (grid[i][j] == 1) {
+					maxArea = Math.max(maxArea, areaOfIsland(grid, i, j));
+				}
+			}
+		}
+		return maxArea;
+	}
+
+	private int areaOfIsland(int[][] grid, int i, int j) {
+		if (i >= 0 && i < grid.length && j >= 0 && j < grid[0].length && grid[i][j] == 1) {
+			grid[i][j] = 0;
+			return 1 + areaOfIsland(grid, i + 1, j) + areaOfIsland(grid, i - 1, j) + areaOfIsland(grid, i, j - 1)
+					+ areaOfIsland(grid, i, j + 1);
+		}
+		return 0;
+	}
+
+	/**
+	 * https://leetcode.com/problems/trapping-rain-water/
+	 * 
+	 * @param height
+	 * @return
+	 */
+	public int trap(int[] height) {
+		int left = 0, right = height.length - 1;
+		int maxLeft = 0, maxRight = 0;
+		int totalWater = 0;
+
+		while (left < right) {
+			if (height[left] < height[right]) {
+				if (height[left] >= maxLeft) {
+					maxLeft = height[left];
+				} else {
+					totalWater += maxLeft - height[left];
+				}
+				left++;
+			} else {
+				if (height[right] >= maxRight) {
+					maxRight = height[right];
+				} else {
+					totalWater += maxRight - height[right];
+				}
+				right--;
+			}
+		}
+		return totalWater;
+	}
+
+	/**
+	 * https://leetcode.com/problems/trapping-rain-water-ii/
+	 * 
+	 * @param heightMap
+	 * @return
+	 */
+	public int trapRainWater(int[][] heightMap) {
+		int m = heightMap.length;
+		int n = heightMap[0].length;
+		boolean[][] visited = new boolean[m][n];
+
+		PriorityQueue<Cell> queue = new PriorityQueue<>((a, b) -> a.height - b.height);
+
+		for (int i = 0; i < m; i++) {
+			visited[i][0] = true;
+			visited[i][n - 1] = true;
+			queue.offer(new Cell(i, 0, heightMap[i][0]));
+			queue.offer(new Cell(i, n - 1, heightMap[i][n - 1]));
+		}
+
+		for (int i = 0; i < n; i++) {
+			visited[0][i] = true;
+			visited[m - 1][i] = true;
+			queue.offer(new Cell(0, i, heightMap[0][i]));
+			queue.offer(new Cell(m - 1, i, heightMap[m - 1][i]));
+		}
+
+		int[][] dirs = new int[][] { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 } };
+		int res = 0;
+		while (!queue.isEmpty()) {
+			Cell cell = queue.poll();
+			for (int[] dir : dirs) {
+				int row = cell.row + dir[0];
+				int col = cell.col + dir[1];
+				if (row >= 0 && row < m && col >= 0 && col < n && !visited[row][col]) {
+					visited[row][col] = true;
+					res += Math.max(0, cell.height - heightMap[row][col]);
+					queue.offer(new Cell(row, col, Math.max(heightMap[row][col], cell.height)));
+				}
+			}
+		}
+
+		return res;
+	}
+
+	private class Cell {
+		int row;
+		int col;
+		int height;
+
+		public Cell(int row, int col, int height) {
+			this.row = row;
+			this.col = col;
+			this.height = height;
+		}
+	}
+
+	/**
+	 * https://leetcode.com/problems/median-of-two-sorted-arrays/
+	 * https://www.youtube.com/watch?v=LPFhl65R7ww
+	 * 
+	 * @param nums1
+	 * @param nums2
+	 * @return
+	 */
+	public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+
+		if (nums1.length > nums2.length) {
+			return findMedianSortedArrays(nums2, nums1);
+		}
+
+		int x = nums1.length;
+		int y = nums2.length;
+
+		int low = 0;
+		int high = x;
+
+		while (low <= high) {
+			int partitionX = (low + high) / 2;
+			int partitionY = (x + y + 1) / 2 - partitionX;
+
+			int maxLeftX = (partitionX == 0) ? Integer.MIN_VALUE : nums1[partitionX - 1];
+			int minRightX = (partitionX == x) ? Integer.MAX_VALUE : nums1[partitionX];
+
+			int maxLeftY = (partitionY == 0) ? Integer.MIN_VALUE : nums2[partitionY - 1];
+			int minRightY = (partitionY == y) ? Integer.MAX_VALUE : nums2[partitionY];
+
+			if (maxLeftX <= minRightY && maxLeftY <= minRightX) {
+				if ((x + y) % 2 == 0) {
+					return ((double) Math.max(maxLeftX, maxLeftY) + Math.min(minRightX, minRightY)) / 2;
+				} else {
+					return (double) Math.max(maxLeftX, maxLeftY);
+				}
+			} else if (maxLeftX > minRightY) {
+				high = partitionX - 1;
+			} else {
+				low = partitionX + 1;
+			}
+		}
+		return -1d;
+	}
+
+	/**
+	 * https://leetcode.com/problems/jump-game/
+	 * 
+	 * @param nums
+	 * @return
+	 */
+	public boolean canJump(int[] nums) {
+		int reachableIdx = 0;
+		for (int i = 0; i < nums.length; i++) {
+			if (i > reachableIdx) {
+				return false;
+			}
+			// Greedy algorithm. Take the max jump from the position.
+			reachableIdx = Math.max(reachableIdx, i + nums[i]);
+		}
+		return true;
+	}
+
+	/**
+	 * https://leetcode.com/problems/jump-game-ii/
+	 * 
+	 * @param nums
+	 * @return
+	 */
+	public int jump(int[] nums) {
+		int jumps = 0, curEnd = 0, reachableIdx = 0;
+		for (int i = 0; i < nums.length - 1; i++) {
+			reachableIdx = Math.max(reachableIdx, i + nums[i]);
+			if (i == curEnd) {
+				jumps++;
+				curEnd = reachableIdx;
+			}
+		}
+		return jumps;
+	}
+
+	/**
+	 * https://leetcode.com/problems/find-all-lonely-numbers-in-the-array/
+	 * 
+	 * @param nums
+	 * @return
+	 */
+	public List<Integer> findLonely(int[] nums) {
+		List<Integer> list = new ArrayList<>();
+		Map<Integer, Integer> map = new HashMap<>();
+		for (int num : nums) {
+			map.put(num, map.getOrDefault(num, 0) + 1);
+		}
+
+		for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+			if (entry.getValue() == 1 && !map.containsKey(entry.getKey() - 1) && !map.containsKey(entry.getKey() + 1)) {
+				list.add(entry.getKey());
+			}
+		}
+		return list;
+	}
+
+	/**
+	 * https://leetcode.com/problems/kth-smallest-element-in-a-sorted-matrix/
+	 * 
+	 * @param matrix
+	 * @param k
+	 * @return
+	 */
+	public int kthSmallestWithBinarySearch(int[][] matrix, int k) {
+		int m = matrix.length;
+		int n = matrix[0].length; // For general, the matrix need not be a square
+
+		int left = matrix[0][0];
+		int right = matrix[m - 1][n - 1];
+
+		int ans = -1;
+
+		while (left <= right) {
+			int mid = (left + right) >> 1;
+			if (countLessOrEqual(matrix, mid) >= k) {
+				ans = mid;
+				right = mid - 1; // try to looking for a smaller value in the left side
+			} else {
+				left = mid + 1; // try to looking for a bigger value in the right side
+			}
+		}
+		return ans;
+	}
+
+	private int countLessOrEqual(int[][] matrix, int x) {
+		int m = matrix.length;
+		int n = matrix[0].length;
+		int count = 0;
+		int col = n - 1; // start with the rightmost column
+		for (int row = 0; row < m; ++row) {
+			while (col >= 0 && matrix[row][col] > x) {
+				--col; // decrease column until matrix[r][c] <= x
+			}
+			count += (col + 1);
+		}
+		return count;
+	}
+	
+	/**
+	 * https://leetcode.com/problems/kth-smallest-element-in-a-sorted-matrix/
+	 * 
+	 * @param matrix
+	 * @param k
+	 * @return
+	 */
+	public int kthSmallest(int[][] matrix, int k) {
+        int m = matrix.length; 
+        int n = matrix[0].length;
+        
+        int ans = -1;
+        PriorityQueue<int[]> minHeap = new PriorityQueue<>(Comparator.comparingInt(arr -> arr[0]));
+        
+        for (int row = 0; row < Math.min(m, k); ++row) {
+        	// Take the values from first column initially 
+            minHeap.offer(new int[]{matrix[row][0], row, 0});
+        }
+
+        for (int i = 1; i <= k; ++i) {
+            int[] top = minHeap.poll();
+            int row = top[1];
+            int col = top[2];
+            ans = top[0];
+            if (col + 1 < n) {
+            	// Add values through the row in queue.
+            	minHeap.offer(new int[]{matrix[row][col + 1], row, col + 1});
             }
         }
-        return list;
+        return ans;
     }
-    
-    private int findMaxIndex(int[] arr, int start, int end) {
-        int maxIndex = start;
-        for(int i = start; i <= end; i++) {
-            if(arr[maxIndex] < arr[i]) {
-                maxIndex = i;
+	
+	/**
+	 * https://leetcode.com/problems/average-waiting-time/
+	 * 
+	 * @param customers
+	 * @return
+	 */
+	public double averageWaitingTime(int[][] customers) {
+		long waitingTime = 0;
+        long currentTime = customers[0][0];
+        for(int i = 0; i < customers.length; i++) {
+            if(currentTime > customers[i][0]) {
+                waitingTime += currentTime - customers[i][0];  
+            } else {
+                currentTime = customers[i][0];
             }
+            currentTime += customers[i][1];
+            waitingTime += customers[i][1];
         }
-        return maxIndex;
-    }
-    
-    /**
-     * https://leetcode.com/problems/max-area-of-island/
-     * 
-     * @param grid
-     * @return
-     */
-    public int maxAreaOfIsland(int[][] grid) {
-        int maxArea = 0;
-        for(int i = 0; i < grid.length; i++) {
-            for(int j = 0; j < grid[0].length; j++) {
-                if(grid[i][j] == 1) {
-                	maxArea = Math.max(maxArea, areaOfIsland(grid, i, j));
-                }
-            }
-        }
-        return maxArea;
-    }
-    
-    private int areaOfIsland(int[][] grid, int i, int j){
-        if( i >= 0 && i < grid.length && j >= 0 && j < grid[0].length && grid[i][j] == 1){
-            grid[i][j] = 0;
-            return 1 + areaOfIsland(grid, i+1, j) + areaOfIsland(grid, i-1, j) + areaOfIsland(grid, i, j-1) + areaOfIsland(grid, i, j+1);
-        }
-        return 0;
+        
+        return (double) waitingTime / customers.length;
     }
 }
