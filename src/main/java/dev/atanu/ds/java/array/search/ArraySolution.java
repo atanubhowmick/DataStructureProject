@@ -18,11 +18,10 @@ import dev.atanu.ds.java.linked.list.ListNode;
 public class ArraySolution {
 
 	public static void main(String[] args) {
-		int[][] arr1 = new int[][] { { 2, 3 }, { 6, 3 }, { 7, 5 }, { 11, 3 }, { 15, 2 }, { 18, 1 } };
-		int[] arr2 = new int[] { 2 };
+		int[] arr1 = new int[] {1, 4, 8, 9, 10, 15};
+		int[][] arr2 = new int[][] {{0,0,1,1},{1,0,1,0},{1,1,0,0}};
 		ArraySolution solution = new ArraySolution();
-		double kthSmallest = solution.averageWaitingTime(arr1);
-		System.out.println(kthSmallest);
+		System.out.println(solution.findClosestElements(arr1, 4, 15));
 	}
 
 	/**
@@ -916,6 +915,29 @@ public class ArraySolution {
 	}
 
 	/**
+	 * https://leetcode.com/problems/container-with-most-water/
+	 * 
+	 * @param height
+	 * @return
+	 */
+	public int maxArea(int[] height) {
+        int left = 0, right = height.length - 1;
+        int maxArea = 0;
+        
+        while(left < right) {
+            int area = (right - left) * Math.min(height[left], height[right]);
+            maxArea = Math.max(maxArea, area);
+            
+            if(height[left] > height[right]) {
+                right -= 1;
+            } else {
+                left += 1;
+            }
+        }
+        return maxArea;
+    }
+	
+	/**
 	 * https://leetcode.com/problems/median-of-two-sorted-arrays/
 	 * https://www.youtube.com/watch?v=LPFhl65R7ww
 	 * 
@@ -1058,7 +1080,7 @@ public class ArraySolution {
 		}
 		return count;
 	}
-	
+
 	/**
 	 * https://leetcode.com/problems/kth-smallest-element-in-a-sorted-matrix/
 	 * 
@@ -1067,30 +1089,30 @@ public class ArraySolution {
 	 * @return
 	 */
 	public int kthSmallest(int[][] matrix, int k) {
-        int m = matrix.length; 
-        int n = matrix[0].length;
-        
-        int ans = -1;
-        PriorityQueue<int[]> minHeap = new PriorityQueue<>(Comparator.comparingInt(arr -> arr[0]));
-        
-        for (int row = 0; row < Math.min(m, k); ++row) {
-        	// Take the values from first column initially 
-            minHeap.offer(new int[]{matrix[row][0], row, 0});
-        }
+		int m = matrix.length;
+		int n = matrix[0].length;
 
-        for (int i = 1; i <= k; ++i) {
-            int[] top = minHeap.poll();
-            int row = top[1];
-            int col = top[2];
-            ans = top[0];
-            if (col + 1 < n) {
-            	// Add values through the row in queue.
-            	minHeap.offer(new int[]{matrix[row][col + 1], row, col + 1});
-            }
-        }
-        return ans;
-    }
-	
+		int ans = -1;
+		PriorityQueue<int[]> minHeap = new PriorityQueue<>(Comparator.comparingInt(arr -> arr[0]));
+
+		for (int row = 0; row < Math.min(m, k); ++row) {
+			// Take the values from first column initially
+			minHeap.offer(new int[] { matrix[row][0], row, 0 });
+		}
+
+		for (int i = 1; i <= k; ++i) {
+			int[] top = minHeap.poll();
+			int row = top[1];
+			int col = top[2];
+			ans = top[0];
+			if (col + 1 < n) {
+				// Add values through the row in queue.
+				minHeap.offer(new int[] { matrix[row][col + 1], row, col + 1 });
+			}
+		}
+		return ans;
+	}
+
 	/**
 	 * https://leetcode.com/problems/average-waiting-time/
 	 * 
@@ -1099,17 +1121,331 @@ public class ArraySolution {
 	 */
 	public double averageWaitingTime(int[][] customers) {
 		long waitingTime = 0;
-        long currentTime = customers[0][0];
-        for(int i = 0; i < customers.length; i++) {
-            if(currentTime > customers[i][0]) {
-                waitingTime += currentTime - customers[i][0];  
-            } else {
-                currentTime = customers[i][0];
-            }
-            currentTime += customers[i][1];
-            waitingTime += customers[i][1];
+		long currentTime = customers[0][0];
+		for (int i = 0; i < customers.length; i++) {
+			if (currentTime > customers[i][0]) {
+				waitingTime += currentTime - customers[i][0];
+			} else {
+				currentTime = customers[i][0];
+			}
+			currentTime += customers[i][1];
+			waitingTime += customers[i][1];
+		}
+
+		return (double) waitingTime / customers.length;
+	}
+
+	/**
+	 * https://leetcode.com/problems/remove-one-element-to-make-the-array-strictly-increasing/
+	 * 
+	 * @param nums
+	 * @return
+	 */
+	public boolean canBeIncreasing(int[] nums) {
+		int previous = nums[0];
+		boolean used = false;
+		for (int i = 1; i < nums.length; i++) {
+			if (nums[i] <= previous) {
+				if (used) {
+					return false;
+				}
+				used = true;
+				if (i == 1 || nums[i] > nums[i - 2]) {
+					previous = nums[i];
+				}
+			} else {
+				previous = nums[i];
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * https://leetcode.com/problems/rotate-image/
+	 * 
+	 * @param matrix
+	 */
+	public void rotate(int[][] matrix) {
+		int start = 0, end = matrix.length - 1;
+		while (start < end) {
+			for (int i = 0; i < matrix[start].length; i++) {
+				int temp = matrix[start][i];
+				matrix[start][i] = matrix[end][i];
+				matrix[end][i] = temp;
+			}
+			start++;
+			end--;
+		}
+		transposeMatrix(matrix);
+	}
+
+	private void transposeMatrix(int[][] matrix) {
+		for (int i = 0; i < matrix.length; i++) {
+			for (int j = i + 1; j < matrix[i].length; j++) {
+				int temp = matrix[i][j];
+				matrix[i][j] = matrix[j][i];
+				matrix[j][i] = temp;
+			}
+		}
+	}
+
+	/**
+	 * https://leetcode.com/problems/count-sub-islands/
+	 * 
+	 * @param grid1
+	 * @param grid2
+	 * @return
+	 */
+	public int countSubIslands(int[][] grid1, int[][] grid2) {
+		int count = 0;
+		for (int i = 0; i < grid2.length; i++) {
+			for (int j = 0; j < grid2[i].length; j++) {
+				if (grid2[i][j] == 1 && traverseGrid(grid1, grid2, i, j)) {
+					count++;
+				}
+			}
+		}
+		return count;
+	}
+
+	private boolean traverseGrid(int[][] grid1, int[][] grid2, int x, int y) {
+		if (x < 0 || x >= grid2.length || y < 0 || y >= grid2[x].length || grid2[x][y] != 1) {
+			return true;
+		}
+		grid2[x][y] = 2;
+
+		boolean isValid = true;
+		if (grid1[x][y] != 1) {
+			isValid = false;
+		}
+
+		isValid = traverseGrid(grid1, grid2, x - 1, y) && isValid;
+		isValid = traverseGrid(grid1, grid2, x + 1, y) && isValid;
+		isValid = traverseGrid(grid1, grid2, x, y - 1) && isValid;
+		isValid = traverseGrid(grid1, grid2, x, y + 1) && isValid;
+
+		return isValid;
+	}
+	
+	/**
+	 * https://leetcode.com/problems/group-anagrams/
+	 * 
+	 * @param strs
+	 * @return
+	 */
+	public List<List<String>> groupAnagrams(String[] strs) {
+        if (strs == null || strs.length == 0) return new ArrayList<>();
+        Map<String, List<String>> map = new HashMap<>();
+        for (String s : strs) {
+            char[] ca = new char[26];
+            for (char c : s.toCharArray()) ca[c - 'a']++;
+            String keyStr = String.valueOf(ca);
+            if (!map.containsKey(keyStr)) map.put(keyStr, new ArrayList<>());
+            map.get(keyStr).add(s);
+        }
+        return new ArrayList<>(map.values());
+    }
+	
+	/**
+	 * https://leetcode.com/problems/queens-that-can-attack-the-king/
+	 * 
+	 * @param queens
+	 * @param king
+	 * @return
+	 */
+	public List<List<Integer>> queensAttacktheKing(int[][] queens, int[] king) {
+        
+        int[][] board = new int[8][8];
+        List<List<Integer>> result = new ArrayList<>();
+        
+        for(int i = 0; i < queens.length; i++) {
+            board[queens[i][0]][queens[i][1]] = 1;
         }
         
-        return (double) waitingTime / customers.length;
+        // Moves of the King in all direction
+        int[][] moves = {{1, 0}, {0, 1}, {-1, 0}, {0, -1}, 
+                         {1, 1}, {-1, -1}, {-1, 1}, {1, -1}};
+        
+        for(int i = 0; i < moves.length; i++) {
+            int x = king[0] + moves[i][0];
+            int y = king[1] + moves[i][1];
+            while(x >= 0 && x < 8 && y>= 0 && y < 8) {
+                if(board[x][y] == 1) {
+                    List<Integer> coordinate = new ArrayList<>();
+                    coordinate.add(x);
+                    coordinate.add(y);
+                    result.add(coordinate);
+                    break;
+                }
+                x += moves[i][0];
+                y += moves[i][1];
+            }
+        }
+        return result;
     }
+	
+	/**
+	 * https://leetcode.com/problems/score-after-flipping-matrix/
+	 * 
+	 * @param grid
+	 * @return
+	 */
+	public int matrixScore(int[][] grid) {
+		int m = grid.length, n = grid[0].length;
+		int sum = 0;
+		for (int i = 0; i < m; i++) {
+			if (grid[i][0] == 0) {
+				for (int j = 0; j < n; j++) {
+					grid[i][j] = grid[i][j] == 0 ? 1 : 0;
+				}
+			}
+		}
+		
+		for (int j = 1; j < n; j++) {
+			int count = 0;
+			for (int i = 0; i < m; i++) {
+				if(grid[i][j] == 1) {
+					count++;
+				}
+			}
+			if(count <= grid.length / 2) {
+				for (int i = 0; i < m; i++) {
+					grid[i][j] = grid[i][j] == 0 ? 1 : 0;
+				}
+			}
+		}
+
+		for (int i = 0; i < m; i++) {
+			int decimal = 0;
+			int p = 0;
+			for (int j = grid[i].length - 1; j >= 0; j--) {
+				decimal += grid[i][j] * Math.pow(2, p++);
+			}
+			sum += decimal;
+		}
+		return sum;
+	}
+	
+	/**
+	 * https://leetcode.com/problems/where-will-the-ball-fall/
+	 * 
+	 * @param grid
+	 * @return 
+	 */
+	public int[] findBall(int[][] grid) {
+		int[] result = new int[grid[0].length];
+		// Each loop computes the result for when be drop a ball in column col.
+		for (int col = 0; col < grid[0].length; ++col) {
+			int currRow = 0, currCol = col;
+			while (currRow < grid.length) {
+				if (grid[currRow][currCol] == 1 && currCol + 1 < grid[0].length && grid[currRow][currCol + 1] == 1) {
+					// We go to the right if the current value and the value to the right are both equal to 1.
+					currRow++;
+					currCol++;
+				} else if (grid[currRow][currCol] == -1 && currCol - 1 >= 0 && grid[currRow][currCol - 1] == -1) {
+					// We go to the left if the current value and the value to the left are both equal to -1.
+					currRow++;
+					currCol--;
+				} else {
+					break; // If we can't move to the left or right, then the ball is stuck.
+				}
+			}
+			result[col] = currRow == grid.length ? currCol : -1; // Store -1 if the ball got stuck.
+		}
+		return result;
+	}
+	
+	/**
+	 * https://leetcode.com/problems/k-closest-points-to-origin/
+	 * @param points
+	 * @param k
+	 * @return
+	 */
+	public int[][] kClosest(int[][] points, int k) {
+        PriorityQueue<double[]> queue = new PriorityQueue<>(
+            (p1, p2) -> Double.compare(p1[0], p2[0]));
+        for(int[] point : points) {
+            int x = point[0] - 0;
+            int y = point[1] - 0;
+            double distance = Math.sqrt((double) x*x + (double) y*y);
+            queue.offer(new double[]{distance, point[0], point[1]});
+            if(queue.size() > k) {
+                queue.poll();
+            }
+        }
+        
+        int[][] result = new int[k][2];
+        int i = 0;
+        while(!queue.isEmpty()) {
+            double[] arr = queue.poll();
+            result[i++] = new int[] {(int)arr[1], (int)arr[2]};
+        }
+        return result;
+    }
+	
+	/**
+	 * https://leetcode.com/problems/3sum-with-multiplicity/
+	 * 
+	 * @param arr
+	 * @param target
+	 * @return
+	 */
+	public int threeSumMulti(int[] arr, int target) {
+		Map<Integer, Integer> map = new HashMap<>();
+        
+        int res = 0;
+        int mod = 1000000007;
+        for (int i = 0; i < arr.length; i++) {
+            res = (res + map.getOrDefault(target - arr[i], 0)) % mod;
+            
+            for (int j = 0; j < i; j++) {
+                int temp = arr[i] + arr[j];
+                map.put(temp, map.getOrDefault(temp, 0) + 1);
+            }
+        }
+        return res;
+    }
+	
+	/**
+	 * https://leetcode.com/problems/search-suggestions-system/
+	 * 
+	 * @param products
+	 * @param searchWord
+	 * @return
+	 */
+	public List<List<String>> suggestedProducts(String[] products, String searchWord) {
+        List<List<String>> result = new ArrayList<>();
+        for(int i = 1; i <= searchWord.length(); i++) {
+            List<String> list = new ArrayList<>();
+            String str = searchWord.substring(0, i);
+            for(String product : products) {
+                if(product.startsWith(str)) {
+                    list.add(product);
+                }
+            }
+            result.add(list);
+        }
+        return result;
+    }
+	
+	/**
+	 * https://leetcode.com/problems/find-k-closest-elements/
+	 * 
+	 * @param arr
+	 * @param k
+	 * @param x
+	 * @return
+	 */
+	public List<Integer> findClosestElements(int[] arr, int k, int x) {
+        int left = 0, right = arr.length - k;
+        while (left < right) {
+            int mid = (left + right) / 2;
+            if (x - arr[mid] > arr[mid + k] - x)
+                left = mid + 1;
+            else
+                right = mid;
+        }
+        return Arrays.stream(arr, left, left + k).boxed().collect(Collectors.toList());
+    }
+	
 }
