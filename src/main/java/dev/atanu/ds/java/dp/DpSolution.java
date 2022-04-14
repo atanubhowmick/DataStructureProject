@@ -1,7 +1,7 @@
 /**
  * 
  */
-package dev.atanu.ds.java.dynamic.programming;
+package dev.atanu.ds.java.dp;
 
 /**
  * @author Atanu Bhowmick

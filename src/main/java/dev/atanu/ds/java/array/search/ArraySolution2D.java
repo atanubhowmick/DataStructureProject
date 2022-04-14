@@ -661,5 +661,54 @@ public class ArraySolution2D {
         }
         return result;
     }
+	
+	/**
+	 * https://leetcode.com/problems/game-of-life/
+	 * https://leetcode.com/problems/game-of-life/discuss/73223/Easiest-JAVA-solution-with-explanation
+	 * 
+	 * @param board
+	 */
+	public void gameOfLife(int[][] board) {
+        int m = board.length, n = board[0].length;
+        
+        for(int i = 0; i < m; i++) {
+            for(int j = 0; j < n; j++) {
+                int count  = checkLiveNeighbors(board, i, j);
+                if(board[i][j] == 1 && (count == 2 || count == 3)) {
+                    // Set the cell as 3 as 11 bits for live from live
+                    board[i][j] = 3;
+                } else if(board[i][j] == 0 && count == 3) {
+                    // Set the cell as 2 as 11 bits for live from dead
+                    board[i][j] = 2;
+                }
+            }
+        }
+        
+        for(int i = 0; i < m; i++) {
+            for(int j = 0; j < n; j++) {
+                board[i][j] = board[i][j] >> 1;
+            }
+        }
+    }
+    
+    private int checkLiveNeighbors(int[][] board, int i, int j) {
+        int m = board.length, n = board[0].length;
+        int count = 0;
+        
+        int[][] dirs = new int[][] {{-1, 0}, {0, -1}, {-1, -1}, {-1, 1},
+                                    {1, -1}, {0, 1}, {1, 0}, {1, 1}};
+        
+        for(int[] dir : dirs) {
+            int x = i + dir[0];
+            int y = j + dir[1];
+            
+            if(x >= 0 && x < m && y >= 0 && y < n) {
+                // To determine the next step, LSB of the current state to be taken
+                count += board[x][y] & 1;
+            }
+        }
+        
+        return count;
+    }
 
 }

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package dev.atanu.ds.java.tree.traverse;
+package dev.atanu.ds.java.tree;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -20,7 +20,7 @@ public class BinarySearchTreeSolution {
 	public static void main(String[] args) {
 		BinarySearchTreeSolution solution = new BinarySearchTreeSolution();
 		TreeNode root = solution.createTree();
-		TreeNode node = solution.removeLeafNodes(root, 3);
+		TreeNode node = solution.insertIntoBST(root, 5);
 		System.out.println(node);
 	}
 	
@@ -60,13 +60,13 @@ public class BinarySearchTreeSolution {
 	 * @param root
 	 * @return
 	 */
-	public boolean isValidBSTUsingRecurssion(TreeNode root) {
+	public boolean isValidBSTRecurssion(TreeNode root) {
         if(root == null) {
             return true;
         }
         
         // Inorder traverse
-        if(!isValidBST(root.left))
+        if(!isValidBSTRecurssion(root.left))
             return false;
         
         if(pre != null && pre.val >= root.val) {
@@ -75,7 +75,7 @@ public class BinarySearchTreeSolution {
         
         pre = root;
         
-        if(!isValidBST(root.right))
+        if(!isValidBSTRecurssion(root.right))
             return false;
         
         return true;
@@ -83,17 +83,19 @@ public class BinarySearchTreeSolution {
 	
 	/**
 	 * {@link https://leetcode.com/problems/unique-binary-search-trees/}
+	 * https://en.wikipedia.org/wiki/Catalan_number
+	 * https://stackoverflow.com/questions/3042412/with-n-no-of-nodes-how-many-different-binary-and-binary-search-trees-possib
+	 * 
 	 * @param n
 	 * @return count
 	 */
 	public int numOfBST(int n) {
 		// Using Catalan number
-		// https://en.wikipedia.org/wiki/Catalan_number
-		// https://stackoverflow.com/questions/3042412/with-n-no-of-nodes-how-many-different-binary-and-binary-search-trees-possib
 		long count = 1;
 
-		for (int i = 0; i < n; ++i)
+		for (int i = 0; i < n; ++i) {
 			count = count * 2 * (2 * i + 1) / (i + 2);
+		}
 		return (int) count;
 	}
 	
@@ -150,6 +152,55 @@ public class BinarySearchTreeSolution {
         node.right = right;
         return node;
     }
+    
+    /**
+     * https://leetcode.com/problems/insert-into-a-binary-search-tree/
+     * @param root
+     * @param val
+     * @return
+     */
+	public TreeNode insertIntoBST(TreeNode root, int val) {
+		if (root == null) {
+			return new TreeNode(val);
+		}
+
+		if (val < root.val) {
+			root.left = insertIntoBST(root.left, val);
+		} else {
+			root.right = insertIntoBST(root.right, val);
+		}
+		return root;
+	}
+    
+    /**
+     * https://leetcode.com/problems/insert-into-a-binary-search-tree/
+     * @param root
+     * @param val
+     * @return
+     */
+	public TreeNode insertIntoBSTIteration(TreeNode root, int val) {
+		if (root == null)
+			return new TreeNode(val);
+		TreeNode cur = root;
+		while (true) {
+			if (cur.val <= val) {
+				if (cur.right != null) {
+					cur = cur.right;
+				} else {
+					cur.right = new TreeNode(val);
+					break;
+				}
+			} else {
+				if (cur.left != null) {
+					cur = cur.left;
+				} else {
+					cur.left = new TreeNode(val);
+					break;
+				}
+			}
+		}
+		return root;
+	}
     
     /**
      * This is bottom up approach. First look into the leaf nodes set their levels.
@@ -424,38 +475,38 @@ public class BinarySearchTreeSolution {
 	/**
 	 * The tree is like this
 	 * 
-	 * <br>          20
+	 * <br>          8
 	 * <br>         / \
-	 * <br>        10  30
+	 * <br>        6   15
 	 * <br>       /   / \
-	 * <br>      5   25  3
+	 * <br>      3   12  20
 	 * <br>     / \       \
-	 * <br>    3   8       3
+	 * <br>    2   4       40
 	 *     
 	 * @return root
 	 */
 	private TreeNode createTree() {
-		TreeNode root = new TreeNode(20);
+		TreeNode root = new TreeNode(8);
 		
-		TreeNode left1 = new TreeNode(10);
-		TreeNode right1 = new TreeNode(30);
+		TreeNode left1 = new TreeNode(6);
+		TreeNode right1 = new TreeNode(15);
 		root.setLeft(left1);
 		root.setRight(right1);
 		
-		TreeNode left2 = new TreeNode(5);
+		TreeNode left2 = new TreeNode(3);
 		left1.setLeft(left2);
 		
-		TreeNode left3 = new TreeNode(3);
-		TreeNode right3 = new TreeNode(8);
+		TreeNode left3 = new TreeNode(2);
+		TreeNode right3 = new TreeNode(4);
 		left2.setLeft(left3);
 		left2.setRight(right3);
 		
-		TreeNode left4 = new TreeNode(25);
-		TreeNode right4 = new TreeNode(3);
+		TreeNode left4 = new TreeNode(12);
+		TreeNode right4 = new TreeNode(20);
 		right1.setLeft(left4);
 		right1.setRight(right4);
 		
-		TreeNode right5 = new TreeNode(3);
+		TreeNode right5 = new TreeNode(40);
 		right4.setRight(right5);
 		
 		return root;

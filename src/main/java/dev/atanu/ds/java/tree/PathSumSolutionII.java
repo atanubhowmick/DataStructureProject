@@ -1,7 +1,7 @@
 /**
  * 
  */
-package dev.atanu.ds.java.tree.traverse;
+package dev.atanu.ds.java.tree;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
