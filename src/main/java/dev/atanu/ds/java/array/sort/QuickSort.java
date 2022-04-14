@@ -22,33 +22,33 @@ public class QuickSort {
 	}
 
 	/*
-	private void sort(int[] nums, int l, int r) {
-		if (l >= r) {
+	private void sort(int[] nums, int left, int right) {
+		if (left >= right) {
 			return;
 		}
-		int mid = partition(nums, l, r);
-		sort(nums, l, mid);
-		sort(nums, mid + 1, r);
+		int mid = partition(nums, left, right);
+		sort(nums, left, mid);
+		sort(nums, mid + 1, right);
 	}
 
-	private int partition(int[] nums, int l, int r) {
-		int pivot = nums[l];
-		while (l < r) {
-			while (l < r && nums[r] >= pivot)
-			{
-				r--;
+	private int partition(int[] nums, int left, int right) {
+		int pivot = nums[left];
+		while (left < right) {
+			while (left < right && nums[right] >= pivot) {
+				right--;
 			}
-			nums[l] = nums[r];
+			nums[left] = nums[right];
 			
-			while (l < r && nums[l] <= pivot)
+			while (left < right && nums[left] <= pivot)
 			{
-				l++;
+				left++;
 			}
-			nums[r] = nums[l];
+			nums[right] = nums[left];
 		}
-		nums[l] = pivot;
-		return l;
-	} */
+		nums[left] = pivot;
+		return left;
+	}
+	*/
 	
 	private void sort(int[] nums, int left, int right) {
         if(left >= right) {

@@ -1,4 +1,4 @@
-package dev.atanu.ds.java.array.search;
+package dev.atanu.ds.java.math;
 
 public class BitManupulationSolution {
 
