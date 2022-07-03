@@ -470,6 +470,36 @@ public class BinarySearchTreeSolution {
             return root;
         }
     }
+    
+    /**
+     * https://leetcode.com/problems/kth-smallest-element-in-a-bst/
+     * 
+     * @param root
+     * @param k
+     * @return
+     */
+    public int kthSmallest(TreeNode root, int k) {
+        this.countNodes = k;
+        inorderKsmallest(root);
+        return kSmallest;
+    }
+    
+    private int countNodes = 0;
+    private int kSmallest = 0;
+    
+    private void inorderKsmallest(TreeNode node) {
+        if(node == null) {
+            return;
+        }
+        inorderKsmallest(node.left);
+        
+        countNodes -= 1;
+        if(countNodes == 0) {
+            kSmallest = node.val;
+        }
+        
+        inorderKsmallest(node.right);
+    }
 
 
 	/**

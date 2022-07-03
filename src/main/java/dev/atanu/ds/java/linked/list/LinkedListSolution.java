@@ -3,7 +3,8 @@ package dev.atanu.ds.java.linked.list;
 public class LinkedListSolution {
 
 	public static void main(String[] args) {
-
+		LinkedListSolution solution = new LinkedListSolution();
+		System.out.println(solution.removeNthFromEnd(null, 2));
 	}
 
 	/**
@@ -36,7 +37,7 @@ public class LinkedListSolution {
 	private ListNode mergeNodes(ListNode node1, ListNode node2) {
 		ListNode tempHead = new ListNode(0);
 		ListNode curr = tempHead;
-		
+
 		while (node1 != null && node2 != null) {
 			if (node1.val <= node2.val) {
 				curr.next = node1;
@@ -59,6 +60,33 @@ public class LinkedListSolution {
 			node2 = node2.next;
 			curr = curr.next;
 		}
+		return tempHead.next;
+	}
+
+	/**
+	 * https://leetcode.com/problems/remove-nth-node-from-end-of-list/
+	 * 
+	 * @param head
+	 * @param n
+	 * @return
+	 */
+	public ListNode removeNthFromEnd(ListNode head, int n) {
+		ListNode tempHead = new ListNode(0);
+		tempHead.next = head;
+		ListNode slow = tempHead;
+		ListNode fast = tempHead;
+		
+		while (n > 0) {
+			fast = fast.next;
+			n--;
+		}
+		
+		while (fast.next != null) {
+			fast = fast.next;
+			slow = slow.next;
+		}
+		
+		slow.next = slow.next.next;
 		return tempHead.next;
 	}
 }

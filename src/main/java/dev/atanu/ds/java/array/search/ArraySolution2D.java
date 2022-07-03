@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
+import java.util.Set;
 
 /**
  * 
@@ -19,6 +21,7 @@ public class ArraySolution2D {
 		int[][] arr = new int[][] { { 1, 2, 3, 4 }, { 5, 6, 7, 8 }, { 9, 10, 11, 12 } };
 		ArraySolution2D solution = new ArraySolution2D();
 		solution.shiftGrid(arr, 4);
+		System.currentTimeMillis();
 	}
 
 	/**
@@ -710,5 +713,74 @@ public class ArraySolution2D {
         
         return count;
     }
+    
+    /**
+     * https://leetcode.com/problems/valid-sudoku/
+     * 
+     * @param board
+     * @return
+     */
+	public boolean isValidSudoku(char[][] board) {
+		Set<String> set = new HashSet<>();
 
+		for (int i = 0; i < board.length; i++) {
+			for (int j = 0; j < board[i].length; j++) {
+				char num = board[i][j];
+				boolean validRow = set.add(num + " row at:" + i);
+				boolean validCol = set.add(num + " col at:" + j);
+				boolean validRowCol = set.add(num + " row at:" + i / 3 + " col at:" + j / 3);
+				if (num != '.' && !(validRow && validCol && validRowCol)) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
+	/**
+     * https://leetcode.com/problems/valid-sudoku/
+     * 
+     * @param board
+     * @return
+     */
+	public boolean isValidSudokuWithoutSet(char[][] board) {
+		int number;
+		for (int row = 0; row < board.length; row++) {
+			boolean[] rowCheck = new boolean[9];
+			boolean[] colCheck = new boolean[9];
+			boolean[] boxCheck = new boolean[9];
+
+			for (int col = 0; col < board[0].length; col++) {
+				// check the row
+				if (board[row][col] != '.') {
+					number = board[row][col] - '1';
+					if (rowCheck[number]) {
+						return false;
+					}
+					rowCheck[number] = true;
+				}
+
+				// check the column
+				if (board[col][row] != '.') {
+					number = board[col][row] - '1';
+					if (colCheck[number]) {
+						return false;
+					}
+					colCheck[number] = true;
+				}
+
+				// check the sub-box
+				int rowBox = (row / 3) * 3 + col / 3;
+				int colBox = (row % 3) * 3 + col % 3;
+				if (board[rowBox][colBox] != '.') {
+					number = board[rowBox][colBox] - '1';
+					if (boxCheck[number]) {
+						return false;
+					}
+					boxCheck[number] = true;
+				}
+			}
+		}
+		return true;
+	}
 }

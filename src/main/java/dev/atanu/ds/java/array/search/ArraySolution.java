@@ -18,10 +18,10 @@ import dev.atanu.ds.java.linked.list.ListNode;
 public class ArraySolution {
 
 	public static void main(String[] args) {
-		int[] arr1 = new int[] {1, 4, 8, 9, 10, 15};
-		int[][] arr2 = new int[][] {{0,0,1,1},{1,0,1,0},{1,1,0,0}};
+		int[] arr1 = new int[] { 1, 1, 1 };
+		int[][] arr2 = new int[][] { { 0, 0, 1, 1 }, { 1, 0, 1, 0 }, { 1, 1, 0, 0 } };
 		ArraySolution solution = new ArraySolution();
-		System.out.println(solution.findClosestElements(arr1, 4, 15));
+		System.out.println(solution.skyline(arr1));
 	}
 
 	/**
@@ -219,7 +219,7 @@ public class ArraySolution {
 		nums[pivot] = temp;
 		return end;
 	}
-	
+
 	/**
 	 * https://leetcode.com/problems/kth-largest-element-in-an-array/
 	 * 
@@ -763,22 +763,22 @@ public class ArraySolution {
 	 * @return
 	 */
 	public int maxArea(int[] height) {
-        int left = 0, right = height.length - 1;
-        int maxArea = 0;
-        
-        while(left < right) {
-            int area = (right - left) * Math.min(height[left], height[right]);
-            maxArea = Math.max(maxArea, area);
-            
-            if(height[left] > height[right]) {
-                right -= 1;
-            } else {
-                left += 1;
-            }
-        }
-        return maxArea;
-    }
-	
+		int left = 0, right = height.length - 1;
+		int maxArea = 0;
+
+		while (left < right) {
+			int area = (right - left) * Math.min(height[left], height[right]);
+			maxArea = Math.max(maxArea, area);
+
+			if (height[left] > height[right]) {
+				right -= 1;
+			} else {
+				left += 1;
+			}
+		}
+		return maxArea;
+	}
+
 	/**
 	 * https://leetcode.com/problems/median-of-two-sorted-arrays/
 	 * https://www.youtube.com/watch?v=LPFhl65R7ww
@@ -913,18 +913,21 @@ public class ArraySolution {
 	 * @return
 	 */
 	public List<List<String>> groupAnagrams(String[] strs) {
-        if (strs == null || strs.length == 0) return new ArrayList<>();
-        Map<String, List<String>> map = new HashMap<>();
-        for (String s : strs) {
-            char[] ca = new char[26];
-            for (char c : s.toCharArray()) ca[c - 'a']++;
-            String keyStr = String.valueOf(ca);
-            if (!map.containsKey(keyStr)) map.put(keyStr, new ArrayList<>());
-            map.get(keyStr).add(s);
-        }
-        return new ArrayList<>(map.values());
-    }
-	
+		if (strs == null || strs.length == 0)
+			return new ArrayList<>();
+		Map<String, List<String>> map = new HashMap<>();
+		for (String s : strs) {
+			char[] ca = new char[26];
+			for (char c : s.toCharArray())
+				ca[c - 'a']++;
+			String keyStr = String.valueOf(ca);
+			if (!map.containsKey(keyStr))
+				map.put(keyStr, new ArrayList<>());
+			map.get(keyStr).add(s);
+		}
+		return new ArrayList<>(map.values());
+	}
+
 	/**
 	 * https://leetcode.com/problems/3sum-with-multiplicity/
 	 * 
@@ -934,20 +937,20 @@ public class ArraySolution {
 	 */
 	public int threeSumMulti(int[] arr, int target) {
 		Map<Integer, Integer> map = new HashMap<>();
-        
-        int res = 0;
-        int mod = 1000000007;
-        for (int i = 0; i < arr.length; i++) {
-            res = (res + map.getOrDefault(target - arr[i], 0)) % mod;
-            
-            for (int j = 0; j < i; j++) {
-                int temp = arr[i] + arr[j];
-                map.put(temp, map.getOrDefault(temp, 0) + 1);
-            }
-        }
-        return res;
-    }
-	
+
+		int res = 0;
+		int mod = 1000000007;
+		for (int i = 0; i < arr.length; i++) {
+			res = (res + map.getOrDefault(target - arr[i], 0)) % mod;
+
+			for (int j = 0; j < i; j++) {
+				int temp = arr[i] + arr[j];
+				map.put(temp, map.getOrDefault(temp, 0) + 1);
+			}
+		}
+		return res;
+	}
+
 	/**
 	 * https://leetcode.com/problems/search-suggestions-system/
 	 * 
@@ -956,20 +959,20 @@ public class ArraySolution {
 	 * @return
 	 */
 	public List<List<String>> suggestedProducts(String[] products, String searchWord) {
-        List<List<String>> result = new ArrayList<>();
-        for(int i = 1; i <= searchWord.length(); i++) {
-            List<String> list = new ArrayList<>();
-            String str = searchWord.substring(0, i);
-            for(String product : products) {
-                if(product.startsWith(str)) {
-                    list.add(product);
-                }
-            }
-            result.add(list);
-        }
-        return result;
-    }
-	
+		List<List<String>> result = new ArrayList<>();
+		for (int i = 1; i <= searchWord.length(); i++) {
+			List<String> list = new ArrayList<>();
+			String str = searchWord.substring(0, i);
+			for (String product : products) {
+				if (product.startsWith(str)) {
+					list.add(product);
+				}
+			}
+			result.add(list);
+		}
+		return result;
+	}
+
 	/**
 	 * https://leetcode.com/problems/find-k-closest-elements/
 	 * 
@@ -979,17 +982,17 @@ public class ArraySolution {
 	 * @return
 	 */
 	public List<Integer> findClosestElements(int[] arr, int k, int x) {
-        int left = 0, right = arr.length - k;
-        while (left < right) {
-            int mid = (left + right) / 2;
-            if (x - arr[mid] > arr[mid + k] - x)
-                left = mid + 1;
-            else
-                right = mid;
-        }
-        return Arrays.stream(arr, left, left + k).boxed().collect(Collectors.toList());
-    }
-	
+		int left = 0, right = arr.length - k;
+		while (left < right) {
+			int mid = (left + right) / 2;
+			if (x - arr[mid] > arr[mid + k] - x)
+				left = mid + 1;
+			else
+				right = mid;
+		}
+		return Arrays.stream(arr, left, left + k).boxed().collect(Collectors.toList());
+	}
+
 	/**
 	 * https://leetcode.com/problems/rotate-array/
 	 * 
@@ -997,10 +1000,102 @@ public class ArraySolution {
 	 * @param k
 	 */
 	public void rotate(int[] nums, int k) {
-	    k = k % nums.length;
-	    reverse(nums, 0, nums.length - 1);
-	    reverse(nums, 0, k - 1);
-	    reverse(nums, k, nums.length - 1);
+		k = k % nums.length;
+		reverse(nums, 0, nums.length - 1);
+		reverse(nums, 0, k - 1);
+		reverse(nums, k, nums.length - 1);
 	}
-	
+
+	/**
+	 * https://leetcode.com/problems/find-the-duplicate-number/
+	 * 
+	 * @param nums
+	 * @return
+	 */
+	public int findDuplicate(int[] nums) {
+		int fast = 0, slow = 0;
+
+		fast = nums[nums[fast]];
+		slow = nums[slow];
+
+		// First while loop to get the meeting point inside loop
+		while (nums[fast] != nums[slow]) {
+			fast = nums[nums[fast]];
+			slow = nums[slow];
+		}
+
+		fast = 0;
+
+		// Second while loop to get the initial point of the loop
+		while (nums[fast] != nums[slow]) {
+			fast = nums[fast];
+			slow = nums[slow];
+		}
+		return nums[fast];
+	}
+
+	/**
+	 * https://leetcode.com/problems/count-primes/
+	 * 
+	 * @param n
+	 * @return
+	 */
+	public int countPrimes(int n) {
+		if (n <= 2) {
+			return 0;
+		}
+
+		List<Integer> primeList = new ArrayList<>();
+		primeList.add(2);
+
+		for (int i = 3; i < n; i += 2) {
+			int sqrt = (int) Math.sqrt(i);
+			boolean isPrime = true;
+			for (int prime : primeList) {
+				if (prime > sqrt) {
+					break;
+				}
+				if (i % prime == 0) {
+					isPrime = false;
+				}
+			}
+			if (isPrime) {
+				primeList.add(i);
+			}
+		}
+
+		return primeList.size();
+	}
+
+	private int skyline(int[] arr) {
+		int result = 0;
+		int prev = 0;
+
+		for (int element : arr) {
+			if (element > prev) {
+				result += (element - prev);
+			}
+			prev = element;
+
+			if (result > 1000000000 || result < 0) {
+				return -1;
+			}
+		}
+
+		return result;
+	}
+
+	private int attendTraining(String[] employees) {
+		Map<Integer, List<Integer>> map = new HashMap<>();
+		for (int i = 0; i < employees.length; i++) {
+			for (char day : employees[i].toCharArray()) {
+				int dayInt = day - '0';
+				if(!map.containsKey(dayInt)) {
+					map.put(dayInt, new ArrayList<>());
+				}
+				map.get(dayInt).add(i);
+			}
+		}
+		return 0;
+	}
 }
