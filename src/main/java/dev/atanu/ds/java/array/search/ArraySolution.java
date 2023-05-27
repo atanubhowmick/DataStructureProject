@@ -18,11 +18,35 @@ import dev.atanu.ds.java.linked.list.ListNode;
 public class ArraySolution {
 
 	public static void main(String[] args) {
-		int[] arr1 = new int[] { 1, 1, 1 };
+		int[] arr1 = new int[] { 5, 7, 1, 4, 10, 8};
 		int[][] arr2 = new int[][] { { 0, 0, 1, 1 }, { 1, 0, 1, 0 }, { 1, 1, 0, 0 } };
 		ArraySolution solution = new ArraySolution();
-		System.out.println(solution.skyline(arr1));
+		System.out.println(solution.findKthSmallest(arr1, 4));
 	}
+	
+	/**
+	 * https://leetcode.com/problems/next-greater-element-i/
+	 * 
+	 * @param nums1
+	 * @param nums2
+	 * @return 
+	 */
+	public int[] nextGreaterElement(int[] nums1, int[] nums2) {
+        int[] result = new int[nums1.length];
+        Stack<Integer> stack = new Stack<>();
+        Map<Integer, Integer> map = new HashMap<>();
+        
+        for (int i = 0; i < nums2.length; i++) {
+            while(!stack.isEmpty() && stack.peek() < nums2[i]) {
+                map.put(stack.pop(), nums2[i]);
+            }
+            stack.push(nums2[i]);
+        }
+        for(int j = 0; j < nums1.length; j++) {
+            result[j] = map.getOrDefault(nums1[j], -1);
+        }
+        return result;
+    }
 
 	/**
 	 * {@link https://leetcode.com/problems/next-greater-element-ii/}
@@ -165,7 +189,7 @@ public class ArraySolution {
 		if (nums == null || nums.length < k) {
 			return -1;
 		}
-		PriorityQueue<Integer> queue = new PriorityQueue<>((a1, a2) -> a1 > a2 ? -1 : (a1 < a2 ? 1 : -1));
+		PriorityQueue<Integer> queue = new PriorityQueue<>((a1, a2) -> a1 > a2 ? -1 : (a1 < a2 ? 1 : 0));
 		for (int num : nums) {
 			queue.add(num);
 			if (queue.size() > k) {
@@ -289,8 +313,9 @@ public class ArraySolution {
 		List<Integer> res = new ArrayList<>();
 		for (int i = 0; i < nums.length; ++i) {
 			int index = Math.abs(nums[i]) - 1;
-			if (nums[index] < 0)
+			if (nums[index] < 0) {
 				res.add(Math.abs(index + 1));
+			}
 			nums[index] = -nums[index];
 		}
 		return res;
