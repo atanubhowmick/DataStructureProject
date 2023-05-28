@@ -1,3 +1,6 @@
+/**
+ * 
+ */
 package dev.atanu.ds.java.tree;
 
 import java.util.ArrayList;
@@ -6,11 +9,16 @@ import java.util.List;
 import java.util.Set;
 import java.util.Stack;
 
+/**
+ * 
+ * @author Atanu Bhowmick
+ *
+ */
 public class BinaryTreeSolution {
 
 	public static void main(String[] args) {
 		BinaryTreeSolution solution = new BinaryTreeSolution();
-		List<Integer> list = new ArrayList<Integer>();
+		List<Integer> list = new ArrayList<>();
 		solution.dfsPostorder(solution.createTree(), list);
 		System.out.println(list);
 	}
@@ -85,6 +93,29 @@ public class BinaryTreeSolution {
 		dfsPreorder(node.left, list);
 		dfsPreorder(node.right, list);
 	}
+	
+	/**
+	 * Preorder with Stack
+	 * 
+	 * @param root
+	 * @return
+	 */
+	public List<Integer> preorderStack(TreeNode root) {
+        List<Integer> list = new ArrayList<>();
+        if(root == null)
+            return list;
+        Stack<TreeNode> stack = new Stack<>();
+        stack.push(root);
+        while(!stack.isEmpty()){
+            TreeNode node = stack.pop();
+            list.add(node.val);
+            if(node.right != null)
+                stack.push(node.right);
+            if(node.left != null)
+                stack.push(node.left);
+        }
+        return list;
+    }
 
 	/**
 	 * 
@@ -115,6 +146,31 @@ public class BinaryTreeSolution {
 		root.setRight(prev);
 		root.setLeft(null);
 		prev = root;
+	}
+	
+	/**
+	 * https://leetcode.com/problems/path-sum/
+	 * 
+	 * @param root
+	 * @param targetSum
+	 * @return
+	 */
+	public boolean hasPathSum(TreeNode root, int targetSum) {
+		if (root == null) {
+			return false;
+		}
+		return hasPathSum(root, 0, targetSum);
+	}
+
+	private boolean hasPathSum(TreeNode node, int sum, int targetSum) {
+		if (node == null) {
+			return false;
+		}
+		sum += node.getData();
+		if (node.getLeft() == null && node.getRight() == null && sum == targetSum) {
+			return true;
+		}
+		return hasPathSum(node.getLeft(), sum, targetSum) || hasPathSum(node.getRight(), sum, targetSum);
 	}
 
 	private int count = 0;
