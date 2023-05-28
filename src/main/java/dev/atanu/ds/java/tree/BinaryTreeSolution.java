@@ -131,14 +131,38 @@ public class BinaryTreeSolution {
 		list.add(node.val);
 	}
 
-	private TreeNode prev = null;
-
 	/**
-	 * {@link https://leetcode.com/problems/flatten-binary-tree-to-linked-list/}
+	 * https://leetcode.com/problems/flatten-binary-tree-to-linked-list/
 	 * 
 	 * @param root
 	 */
 	public void flatten(TreeNode root) {
+        if(root == null){
+            return;
+        }
+        flatten(root.left);
+        if(root.left != null) {
+            TreeNode temp = root.right;
+            root.right = root.left;
+            root.left = null;
+            while(root.right != null) {
+                root = root.right;
+            }
+            root.right = temp;
+        }
+        flatten(root.right);
+    }
+	
+	
+	private TreeNode prev = null;
+
+	/**
+	 * {@link https://leetcode.com/problems/flatten-binary-tree-to-linked-list/}
+	 * https://leetcode.com/problems/flatten-binary-tree-to-linked-list/discuss/36977/My-short-post-order-traversal-Java-solution-for-share
+	 * 
+	 * @param root
+	 */
+	public void flattenPostOrder(TreeNode root) {
 		if (root == null)
 			return;
 		flatten(root.getRight());
