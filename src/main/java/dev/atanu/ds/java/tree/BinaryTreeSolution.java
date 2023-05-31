@@ -130,6 +130,33 @@ public class BinaryTreeSolution {
 		dfsPostorder(node.right, list);
 		list.add(node.val);
 	}
+	
+	//-----------------------------------------
+	
+	private TreeNode head = new TreeNode(0);
+    private TreeNode current = head;
+
+    /**
+     * https://leetcode.com/problems/increasing-order-search-tree/
+     * 
+     * @param root
+     * @return
+     */
+    public TreeNode increasingBST(TreeNode root) {
+    	inorderIncreasingBST(root);
+        return head.right;
+    }
+
+    private void inorderIncreasingBST(TreeNode node) {
+        if(node == null) {
+            return;
+        }
+        inorderIncreasingBST(node.left);
+        current.right = new TreeNode(node.val);
+        current = current.right;
+        inorderIncreasingBST(node.right);
+    }
+	
 
 	/**
 	 * https://leetcode.com/problems/flatten-binary-tree-to-linked-list/
@@ -172,6 +199,7 @@ public class BinaryTreeSolution {
 		prev = root;
 	}
 	
+	
 	/**
 	 * https://leetcode.com/problems/path-sum/
 	 * 
@@ -180,22 +208,18 @@ public class BinaryTreeSolution {
 	 * @return
 	 */
 	public boolean hasPathSum(TreeNode root, int targetSum) {
-		if (root == null) {
-			return false;
-		}
-		return hasPathSum(root, 0, targetSum);
+		if(root == null) {
+            return false;
+        }
+        
+        if(root.val == targetSum && root.left == null && root.right == null) {
+            return true;
+        }
+        
+        return hasPathSum(root.left, targetSum-root.val)
+                || hasPathSum(root.right, targetSum-root.val);
 	}
-
-	private boolean hasPathSum(TreeNode node, int sum, int targetSum) {
-		if (node == null) {
-			return false;
-		}
-		sum += node.getData();
-		if (node.getLeft() == null && node.getRight() == null && sum == targetSum) {
-			return true;
-		}
-		return hasPathSum(node.getLeft(), sum, targetSum) || hasPathSum(node.getRight(), sum, targetSum);
-	}
+	
 
 	private int count = 0;
 
@@ -210,26 +234,55 @@ public class BinaryTreeSolution {
 		if (root == null) {
 			return 0;
 		}
-		pathSumHelperIII(root, targetSum);
-		return count;
+        calculatePathSum(root, (long)targetSum);
+        pathSumIII(root.left, targetSum);
+        pathSumIII(root.right, targetSum);
+        return count;
 	}
 
-	private int pathSumHelperIII(TreeNode root, int targetSum) {
-		if (root == null) {
+	private void calculatePathSum(TreeNode node, long targetSum) {
+		if (node == null) {
+            return;
+        }
+        
+        if((long) node.val == targetSum) {
+            count++;
+        }
+
+        calculatePathSum(node.left, targetSum - (long) node.val);
+        calculatePathSum(node.right, targetSum - (long) node.val);
+    }
+	
+	
+	/**
+	 * https://leetcode.com/problems/path-sum-iii/
+	 * 
+	 * @param root
+	 * @param targetSum
+	 * @return
+	 */
+	public int pathSum(TreeNode root, int targetSum) {
+        if (root == null) {
 			return 0;
 		}
-		int sum = 0;
-		sum += root.val;
-		sum += pathSumHelperIII(root.left, targetSum);
-		if (sum == targetSum) {
-			count++;
-		}
-		sum += pathSumHelperIII(root.right, targetSum);
-		if (sum == targetSum) {
-			count++;
-		}
-		return sum;
-	}
+        return pathSumHelperPreorder(root, (long)targetSum)
+                + pathSum(root.left, targetSum)
+                + pathSum(root.right, targetSum);
+    }
+    
+    private int pathSumHelperPreorder(TreeNode node, long targetSum) {
+		if (node == null) {
+            return 0;
+        }
+        
+        int matchCount = 0;
+        if((long) node.val == targetSum) {
+        	matchCount = 1;
+        }
+
+        return matchCount + pathSumHelperPreorder(node.left, targetSum - node.val) 
+                + pathSumHelperPreorder(node.right, targetSum - node.val);
+    }
 
 	/**
 	 * {@link https://leetcode.com/problems/sum-of-root-to-leaf-binary-numbers/}
