@@ -1,4 +1,4 @@
-package dev.atanu.ds.java.array.search;
+package dev.atanu.ds.java.array;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,7 +19,7 @@ public class ArraySolution {
 		int[] arr1 = new int[] { 5, 7, 1, 4, 10, 8};
 		int[][] arr2 = new int[][] { { 0, 0, 1, 1 }, { 1, 0, 1, 0 }, { 1, 1, 0, 0 } };
 		ArraySolution solution = new ArraySolution();
-		System.out.println(solution.findKthSmallest(arr1, 4));
+		System.out.println(solution.findKthLargest(arr1, 3));
 	}
 	
 	/**
@@ -173,7 +173,7 @@ public class ArraySolution {
 				queue.poll();
 			}
 		}
-		return queue.poll();
+		return queue.peek();
 	}
 
 	/**
@@ -194,7 +194,7 @@ public class ArraySolution {
 				queue.poll();
 			}
 		}
-		return queue.poll();
+		return queue.peek();
 	}
 
 	/**

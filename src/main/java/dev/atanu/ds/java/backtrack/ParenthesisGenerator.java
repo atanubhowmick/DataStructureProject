@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author ATANU
+ * @author Atanu Bhowmick
  *
  */
 public class ParenthesisGenerator {
@@ -20,6 +20,12 @@ public class ParenthesisGenerator {
 		System.out.println(list);
 	}
 
+	/**
+	 * https://leetcode.com/problems/generate-parentheses/
+	 * 
+	 * @param n
+	 * @return
+	 */
 	public static List<String> generateParenthesis(int n) {
 		List<String> res = new ArrayList<>();
 		helper(res, new StringBuilder(), 0, 0, n);

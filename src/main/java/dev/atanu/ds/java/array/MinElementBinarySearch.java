@@ -1,7 +1,7 @@
 /**
  * 
  */
-package dev.atanu.ds.java.array.search;
+package dev.atanu.ds.java.array;
 
 /**
  * Find minimum element from sorted then rotated array.

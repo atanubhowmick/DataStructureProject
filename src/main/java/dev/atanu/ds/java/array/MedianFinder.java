@@ -1,4 +1,4 @@
-package dev.atanu.ds.java.array.search;
+package dev.atanu.ds.java.array;
 
 import java.util.Comparator;
 import java.util.PriorityQueue;
