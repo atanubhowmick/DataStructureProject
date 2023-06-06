@@ -1,7 +1,7 @@
 /**
  * 
  */
-package dev.atanu.ds.java.array;
+package dev.atanu.ds.java.backtrack;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,9 +19,9 @@ public class PermutationCombination {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		int[] arr = new int[] { 10, 1, 2, 7, 6, 1, 5 };
+		int[] arr = new int[] { 1, 2, 3 };
 		PermutationCombination pc = new PermutationCombination();
-		System.out.println(pc.targetSum3(9, 3, 9));
+		System.out.println(pc.getAllSubsets("ABC"));
 	}
 	
 	/**
@@ -461,6 +461,173 @@ public class PermutationCombination {
 	}
 	
 	
+	/**
+	 * https://leetcode.com/problems/combination-sum-iv/
+	 * 
+	 * @param n
+	 * @param k
+	 * @return
+	 */
+	public int targetSum4(int[] nums, int target) {
+		int[] count = new int[]{0};
+		targetSum4(count, new ArrayList<>(), nums, target);
+		return count[0];
+	}
+
+	private void targetSum4(int[] count, List<Integer> tempList, int[] nums, int target) {
+		if(target < 0) {
+			return;
+		}
+		
+		if(target == 0) {
+			count[0] = count[0] + 1;
+			System.out.println(tempList);
+		} else {
+			for (int i = 0; i < nums.length; i++) {
+				tempList.add(nums[i]);
+				targetSum4(count, tempList, nums, target - nums[i]);
+				tempList.remove(tempList.size() - 1);
+			}
+		}
+	}
+	
+	/**
+	 * https://leetcode.com/problems/combination-sum-iv/
+	 * 
+	 * The above method can be simplified to as this one
+	 * 
+	 * @param n
+	 * @param k
+	 * @return
+	 */
+	public int targetSum4WithoutCountArray(int[] nums, int target) {
+		if(target < 0) {
+			return 0;
+		} else if(target == 0) {
+			return 1;
+		}
+		
+		int result = 0;
+		for (int i = 0; i < nums.length; i++) {
+			result += targetSum4WithoutCountArray(nums, target - nums[i]);
+		}
+		return result;
+	}
 	
 	
+	/**
+	 * https://leetcode.com/problems/combination-sum-iv/
+	 * 
+	 * Solution with DP
+	 * 
+	 * @param n
+	 * @param k
+	 * @return
+	 */
+	public int targetSum4UsingDP(int[] nums, int target) {
+		int[] dp = new int[target + 1];
+		//dp[0] = 1; This is a edge case
+		for(int i = 1; i <= target; i++) {
+			dp[i] = -1;
+		}
+		
+		return targetSum4UsingDP(dp, nums, target);
+	}
+	
+	private int targetSum4UsingDP(int[] dp, int[] nums, int target) {
+		if(target < 0) {
+			return 0;
+		} else if(target == 0) {
+			return 1;
+		} else if(dp[target] != -1) {
+			return dp[target];
+		}
+		
+		int result = 0;
+		for (int i = 0; i < nums.length; i++) {
+			result += targetSum4UsingDP(dp, nums, target - nums[i]);
+		}
+		dp[target] = result;
+		return result;
+	}
+
+	/**
+	 * It's similar as - getValidCombinations() method
+	 * Only need to remove the if block to add the combinations with 
+	 * different length.
+	 * 
+	 * For input string 'ABC', it returns
+	 * [, A, AB, ABC, AC, B, BC, C]
+	 * 
+	 * @param str - should not contain duplicate
+	 * @param k
+	 * @return
+	 */
+	public List<String> getAllSubsets(String str) {
+		List<String> list = new ArrayList<>();
+		getAllSubsets(list, str, new StringBuilder(), 0);
+		return list;
+	}
+
+	private void getAllSubsets(List<String> list, String str, StringBuilder sb, int start) {
+		list.add(sb.toString());
+		for (int i = start; i < str.length(); i++) {
+			sb.append(str.charAt(i));
+			getAllSubsets(list, str, sb, i + 1); // Make a note of i+1
+			sb.setLength(sb.length() - 1);
+		}
+
+	}
+	
+	/**
+	 * https://leetcode.com/problems/subsets/
+	 * 
+	 * It's similar as - getValidCombinations() method
+	 * Only need to remove the if block to add the combinations with 
+	 * different length.
+	 * 
+	 * @param nums - should not contain duplicate
+	 * @return
+	 */
+	public List<List<Integer>> subsets(int[] nums) {
+		List<List<Integer>> list = new ArrayList<>();
+		Arrays.sort(nums);
+		backtrackSubsets(list, new ArrayList<>(), nums, 0);
+		return list;
+	}
+
+	private void backtrackSubsets(List<List<Integer>> list, List<Integer> tempList, int[] nums, int start) {
+		list.add(new ArrayList<>(tempList)); // if block removed to get all subsets
+		for (int i = start; i < nums.length; i++) {
+			tempList.add(nums[i]);
+			backtrackSubsets(list, tempList, nums, i + 1);
+			tempList.remove(tempList.size() - 1);
+		}
+	}
+	
+	/**
+	 * https://leetcode.com/problems/subsets-ii/
+	 * 
+	 * @param nums - may contain duplicates
+	 * @return
+	 */
+	public List<List<Integer>> subsetsWithDup(int[] nums) {
+		Arrays.sort(nums);
+		List<List<Integer>> list = new ArrayList<>();
+		backtrackingSubsetsWithDup(list, new ArrayList<>(), nums, 0);
+		return list;
+	}
+
+	private void backtrackingSubsetsWithDup(List<List<Integer>> list, 
+				List<Integer> tempList, int[] nums, int start) {
+		list.add(new ArrayList<>(tempList));
+		for (int i = start; i < nums.length; i++) {
+			if (i > start && nums[i] == nums[i - 1]) {
+				continue;
+			}
+			tempList.add(nums[i]);
+			backtrackingSubsetsWithDup(list, tempList, nums, i + 1);
+			tempList.remove(tempList.size() - 1);
+		}
+	}
 }
