@@ -20,8 +20,7 @@ public class ArraySolution2D {
 	public static void main(String[] args) {
 		int[][] arr = new int[][] { { 1, 2, 3, 4 }, { 5, 6, 7, 8 }, { 9, 10, 11, 12 } };
 		ArraySolution2D solution = new ArraySolution2D();
-		solution.shiftGrid(arr, 4);
-		System.currentTimeMillis();
+		System.out.println(solution.uniquePaths(3, 2));
 	}
 
 	/**
@@ -783,4 +782,67 @@ public class ArraySolution2D {
 		}
 		return true;
 	}
+	
+	
+	/**
+	 * https://leetcode.com/problems/unique-paths/
+	 * Simple recurssion
+	 * 
+	 * @param m
+	 * @param n
+	 * @return
+	 */
+	public int uniquePaths(int m, int n) {
+        return uniquePathsHelper(m - 1, n - 1);
+    }
+
+    private int uniquePathsHelper(int row, int col) {
+        if(row < 0 || col < 0) {
+            return 0;
+        } else if(row == 0 && col == 0) {
+            return 1;
+        }
+
+        int count = 0;
+        count += uniquePathsHelper(row, col - 1);
+        count += uniquePathsHelper(row - 1, col);
+        return count;
+    }
+    
+    /**
+	 * https://leetcode.com/problems/unique-paths/
+	 * DP Memoization
+	 * 
+	 * @param m
+	 * @param n
+	 * @return
+	 */
+	public int uniquePathsDPMemoization(int m, int n) {
+		int[][] dp = new int[m + 1][n + 1];
+		for(int i = 0; i <= m; i++) {
+			for(int j = 0; j <= n; j++) {
+				dp[i][j] = -1;
+			}
+		}
+		dp[0][0] = 1;
+        return uniquePathsDPMemoization(dp, m - 1, n - 1);
+    }
+
+    private int uniquePathsDPMemoization(int[][] dp, int row, int col) {
+        if(row < 0 || col < 0) {
+            return 0;
+        } 
+        if(row == 0 && col == 0) {
+            return 1;
+        }
+        if(dp[row][col] != -1) {
+        	return dp[row][col];
+        }
+
+        int count = 0;
+        count += uniquePathsDPMemoization(dp,row, col - 1);
+        count += uniquePathsDPMemoization(dp, row - 1, col);
+        return dp[row][col] = count;
+    }
+    
 }

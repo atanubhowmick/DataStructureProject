@@ -16,10 +16,9 @@ import dev.atanu.ds.java.linked.list.ListNode;
 public class ArraySolution {
 
 	public static void main(String[] args) {
-		int[] arr1 = new int[] { 5, 7, 1, 4, 10, 8};
-		int[][] arr2 = new int[][] { { 0, 0, 1, 1 }, { 1, 0, 1, 0 }, { 1, 1, 0, 0 } };
+		int[] nums = new int[] { 8, 2, 0, -2, -4, 4, 0, 9, 4 };
 		ArraySolution solution = new ArraySolution();
-		System.out.println(solution.findKthLargest(arr1, 3));
+		System.out.println(solution.maxProduct(nums));
 	}
 	
 	/**
@@ -282,6 +281,40 @@ public class ArraySolution {
 		return right;
 	}
 
+	/**
+	 * https://leetcode.com/problems/partition-array-according-to-given-pivot/
+	 * 
+	 * @param nums
+	 * @param pivot
+	 * @return
+	 */
+	public int[] pivotArray(int[] nums, int pivot) {
+        int n = nums.length;
+        int[] arr = new int[n];
+
+        int countOfPivot = 0, index = 0;
+
+        for(int i = 0; i < n; i++) {
+            if(nums[i] < pivot) {
+                arr[index++] = nums[i];
+            } else if(nums[i] == pivot) {
+                countOfPivot++;
+            }
+        }
+
+        for(int i = 1; i <= countOfPivot; i++) {
+            arr[index++] = pivot;
+        }
+
+        for(int i = 0; i < n; i++) {
+            if(nums[i] > pivot) {
+                arr[index++] = nums[i];
+            }
+        }
+
+        return arr;
+    }
+	
 	/**
 	 * https://leetcode.com/problems/find-all-duplicates-in-an-array/
 	 * 
@@ -924,36 +957,67 @@ public class ArraySolution {
 
 		return primeList.size();
 	}
+	
+	/**
+	 * https://leetcode.com/problems/find-the-winner-of-the-circular-game/
+	 * 
+	 * @param n
+	 * @param k
+	 * @return
+	 */
+	public int findTheWinner(int n, int k) {
+        boolean[] arr = new boolean[n];
+        for(int i = 0; i < n; i++) {
+            arr[i] = true;
+        }
+        int index = 0, loopCount = n;
+        while(loopCount > 1) {
+            int j = 1;
+            while(j < k) {
+            	index++;
+                index %= n;
+                if(arr[index]) {
+                    j++;
+                }
+            }
+            arr[index] = false;
+            
+            while(!arr[index]) {
+            	index++;
+                index %= n;
+            }
+            
+            loopCount--;
+        }
 
-	private int skyline(int[] arr) {
-		int result = 0;
-		int prev = 0;
+        int idx = 0;
+        for(int i = 0; i < n; i++) {
+            if(arr[i]) {
+                idx = i;
+                break;
+            }
+        }
+        return idx + 1;
 
-		for (int element : arr) {
-			if (element > prev) {
-				result += (element - prev);
-			}
-			prev = element;
-
-			if (result > 1000000000 || result < 0) {
-				return -1;
-			}
+    }
+	
+	
+	/**
+     * https://leetcode.com/problems/maximum-product-subarray/
+     * 
+     * @param nums
+     * @return
+     */
+	public int maxProduct(int[] nums) {
+		int n = nums.length;
+		int result = nums[0];
+		int left = 0, right = 0;
+		
+		for (int i = 0; i < n; i++) {
+			left = (left == 0 ? 1 : left) * nums[i];
+			right = (right == 0 ? 1 : right) * nums[n - 1 - i];
+			result = Math.max(result, Math.max(left, right));
 		}
-
 		return result;
-	}
-
-	private int attendTraining(String[] employees) {
-		Map<Integer, List<Integer>> map = new HashMap<>();
-		for (int i = 0; i < employees.length; i++) {
-			for (char day : employees[i].toCharArray()) {
-				int dayInt = day - '0';
-				if(!map.containsKey(dayInt)) {
-					map.put(dayInt, new ArrayList<>());
-				}
-				map.get(dayInt).add(i);
-			}
-		}
-		return 0;
 	}
 }
