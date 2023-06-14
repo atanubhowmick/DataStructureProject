@@ -18,7 +18,8 @@ public class ArraySolution {
 	public static void main(String[] args) {
 		int[] nums = new int[] { 8, 2, 0, -2, -4, 4, 0, 9, 4 };
 		ArraySolution solution = new ArraySolution();
-		System.out.println(solution.maxProduct(nums));
+		//System.out.println(solution.towerOfHanoi(2));
+		solution.towerOfHanoi(25);
 	}
 	
 	/**
@@ -998,7 +999,6 @@ public class ArraySolution {
             }
         }
         return idx + 1;
-
     }
 	
 	
@@ -1020,4 +1020,134 @@ public class ArraySolution {
 		}
 		return result;
 	}
+	
+	
+	/**
+	 * https://leetcode.com/problems/3sum/
+	 * 
+	 * @param nums
+	 * @return
+	 */
+	public List<List<Integer>> threeSum(int[] nums) {
+        Arrays.sort(nums);
+        int n = nums.length;
+        Set<List<Integer>> set = new HashSet<>();
+        for(int i = 0; i < n - 1; i++) {
+            Map<Integer, Integer> map = new HashMap<>();
+            int sum = 0 - nums[i];
+            for(int j = i + 1; j < n; j++) {
+                if(!map.containsKey(sum - nums[j])) {
+                    map.put(nums[j], j);
+                } else {
+                    int k = map.get(sum - nums[j]);
+                    List<Integer> list = new ArrayList<>();
+                    list.add(nums[i]);
+                    if(nums[j] < nums[k]) {
+                        list.add(nums[j]);
+                        list.add(nums[k]);
+                    } else {
+                        list.add(nums[k]);
+                        list.add(nums[j]);
+                    }
+                    set.add(list);
+                }
+            }
+        }
+        return set.stream().collect(Collectors.toList());
+	}
+	
+	
+	/**
+	 * https://leetcode.com/problems/valid-triangle-number/
+	 * 
+	 * @param nums
+	 * @return
+	 */
+	public int triangleNumber(int[] nums) {
+		int count = 0;
+		Arrays.sort(nums);
+		for (int k = nums.length - 1; k >= 2; k--) {
+			int i = 0;
+			int j = k - 1;
+			while (i < j) {
+				if (nums[i] + nums[j] > nums[k]) {
+					count += j - i;
+					j--;
+				} else {
+					i++;
+				}
+			}
+		}
+		return count;
+	}
+	
+	
+	/**
+	 * https://leetcode.com/problems/minimum-path-sum
+	 * 
+	 * @param grid
+	 * @return
+	 */
+	public int minPathSum(int[][] grid) {
+        int m = grid.length;
+        int n = grid[0].length;
+        int[][] dp = new int[m + 1][n + 1];
+		for(int i = 0; i <= m; i++) {
+			for(int j = 0; j <= n; j++) {
+				dp[i][j] = -1;
+			}
+		}
+        return minPathSum(dp, grid, m - 1, n - 1);
+    }
+
+    private int minPathSum(int[][] dp, int[][] grid, int row, int col) {
+        if(row == 0 && col == 0) {
+            return grid[row][col];
+        }
+        if(dp[row][col] != -1) {
+        	return dp[row][col];
+        }
+
+        if(row == 0) {
+            dp[row][col] = grid[row][col] + minPathSum(dp, grid, row, col - 1); 
+        } else if(col == 0) {
+            dp[row][col] = grid[row][col] + minPathSum(dp, grid, row - 1, col);
+        } else {
+            dp[row][col] = grid[row][col] + Math.min(minPathSum(dp, grid, row, col - 1),
+                    minPathSum(dp, grid, row - 1, col));
+        }
+        return dp[row][col];
+    }
+    
+    
+    /**
+     * https://pencilprogrammer.com/java-programs/tower-of-hanoi/
+     * https://www.geeksforgeeks.org/c-program-for-tower-of-hanoi/
+     * 
+     * Tower of hanoi problem
+     * @param n
+     */
+	public void towerOfHanoi(int n) {
+		long begin = System.currentTimeMillis();
+		towerOfHanoi(n, "A", "B", "C");
+		long finish = System.currentTimeMillis();
+		System.out.println((finish - begin) / 1000);
+	}
+
+	private void towerOfHanoi(int n, String fromRod, String middleRod, String toRod) {
+		if (n == 1) {
+			System.out.println(String.format("Moving disk-%s from %s to %s", n, fromRod, toRod));
+			return;
+		}
+
+		// Move top n-1 disks from A to B using C as middle
+		towerOfHanoi(n - 1, fromRod, toRod, middleRod);
+
+		// Move last disk from A to C
+		System.out.println(String.format("Moving disk-%s from %s to %s", n, fromRod, toRod));
+
+		// Move n-1 disks from B to C using A as middle
+		towerOfHanoi(n - 1, middleRod, fromRod, toRod);
+	}
+    
 }

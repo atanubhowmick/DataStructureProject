@@ -61,20 +61,20 @@ public class QuickSort {
 
 	private int partition(int[] nums, int left, int right) {
 		int pivot = nums[left];
-		int low = left, high = right;
+		int start = left, end = right;
 		while (left < right) {
-			while (left < high && pivot >= nums[left]) {
+			while (left < end && pivot >= nums[left]) {
 				left++;
 			}
 
-			while (low < right && pivot <= nums[right]) {
+			while (start < right && pivot <= nums[right]) {
 				right--;
 			}
 			if (left < right) {
 				swap(nums, left, right);
 			}
 		}
-		swap(nums, low, right);
+		swap(nums, start, right);
 		return right;
 	}
 

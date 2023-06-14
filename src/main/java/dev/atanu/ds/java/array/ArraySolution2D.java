@@ -845,4 +845,46 @@ public class ArraySolution2D {
         return dp[row][col] = count;
     }
     
+    
+    /**
+     * https://leetcode.com/problems/unique-paths-ii/
+     * 
+     * @param obstacleGrid
+     * @return
+     */
+    public int uniquePathsWithObstacles(int[][] obstacleGrid) {
+        int m = obstacleGrid.length;
+        int n = obstacleGrid[0].length;
+        int[][] dp = new int[m + 1][n + 1];
+		for(int i = 0; i <= m; i++) {
+			for(int j = 0; j <= n; j++) {
+				dp[i][j] = -1;
+			}
+		}
+        return uniquePathsWithObstacles(dp, obstacleGrid, m - 1, n - 1);
+    }
+
+    private int uniquePathsWithObstacles(int[][] dp, int[][] obstacleGrid, int row, int col) {
+        if(row < 0 || col < 0) {
+            return 0;
+        }
+        
+        if(obstacleGrid[row][col] == 1) {
+            return 0; // Obstacle present
+        }
+
+        if(row == 0 && col == 0) {
+            return 1;
+        }
+        
+        if(dp[row][col] != -1) {
+        	return dp[row][col];
+        }
+
+        int count = 0;
+        count += uniquePathsWithObstacles(dp, obstacleGrid, row, col - 1);
+        count += uniquePathsWithObstacles(dp, obstacleGrid, row - 1, col);
+        return dp[row][col] = count;
+    }
+    
 }
