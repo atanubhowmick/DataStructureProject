@@ -16,10 +16,9 @@ import dev.atanu.ds.java.linked.list.ListNode;
 public class ArraySolution {
 
 	public static void main(String[] args) {
-		int[] nums = new int[] { 8, 2, 0, -2, -4, 4, 0, 9, 4 };
+		int[] nums = new int[] { 17,12,10,2,7,2,11,20,8 };
 		ArraySolution solution = new ArraySolution();
-		//System.out.println(solution.towerOfHanoi(2));
-		solution.towerOfHanoi(25);
+		System.out.println(solution.wordBreak("aaaaaaa", Arrays.asList("aaaa", "aaa")));
 	}
 	
 	/**
@@ -1119,6 +1118,108 @@ public class ArraySolution {
         return dp[row][col];
     }
     
+    
+    /**
+     * https://leetcode.com/problems/total-cost-to-hire-k-workers/
+     * 
+     * @param costs
+     * @param k
+     * @param candidates
+     * @return
+     */
+    public long totalCost(int[] costs, int k, int candidates) {
+        int sum = 0;
+        if(costs.length < k) {
+            for(int i = 0; i < costs.length; i++) {
+                sum += costs[i];
+            }
+            return sum;
+        }
+        
+        PriorityQueue<Integer> start = new PriorityQueue<>();
+        PriorityQueue<Integer> end = new PriorityQueue<>();
+        int left = 0, right = costs.length - 1;
+        
+        while(left <= right) {
+            if(start.size() < candidates) {
+                start.offer(costs[left++]);
+            } else if(end.size() < candidates) {
+                end.offer(costs[right--]);
+            } else if(start.size() == end.size() && start.size() == candidates) {
+                if(k > 0) {
+                    if(start.peek() == end.peek() || start.peek() < end.peek()) {
+                        sum += start.poll();
+                    } else {
+                        sum += end.poll();
+                    }
+                    k--;
+                } else {
+                    return sum;
+                }
+            }
+        }
+
+        while(k > 0) {
+            if(start.size() > 0 && end.size() > 0) {
+                if(start.peek() == end.peek() || start.peek() < end.peek()) {
+                    sum += start.poll();
+                } else {
+                    sum += end.poll();
+                }
+            } else if(start.size() > 0) {
+                sum += start.poll();
+            } else {
+                sum += end.poll();
+            }
+            k--;
+        }
+
+        return sum;
+    }
+    
+    
+    /**
+	 * https://leetcode.com/problems/longest-substring-without-repeating-characters/
+	 * 
+	 * @param s
+	 * @return
+	 */
+	public int lengthOfLongestSubstring(String s) {
+        if (s.length() == 0) 
+            return 0;
+        HashMap<Character, Integer> map = new HashMap<Character, Integer>();
+        int max=0;
+        for (int i=0, j=0; i<s.length(); ++i){
+            if (map.containsKey(s.charAt(i))){
+                j = Math.max(j,map.get(s.charAt(i))+1);
+            }
+            map.put(s.charAt(i),i);
+            max = Math.max(max,i-j+1);
+        }
+        return max;
+    }
+	
+	
+	/**
+	 * https://leetcode.com/problems/word-break/
+	 * @param s
+	 * @param wordDict
+	 * @return
+	 */
+	public boolean wordBreak(String s, List<String> wordDict) {
+        Set<String> set = wordDict.stream().collect(Collectors.toSet());
+        StringBuffer sb = new StringBuffer();
+        
+        for(int i = 0; i < s.length(); i++) {
+            sb.append(s.charAt(i));
+            if(set.contains(sb.toString())) {
+            	set.remove(sb.toString());
+                sb.setLength(0);
+            }
+        }
+        return sb.length() == 0;
+    }
+	
     
     /**
      * https://pencilprogrammer.com/java-programs/tower-of-hanoi/

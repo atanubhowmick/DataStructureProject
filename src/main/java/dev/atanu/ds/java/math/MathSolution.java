@@ -146,4 +146,34 @@ public class MathSolution {
 			tempList.remove(tempList.size() - 1);
 		}
 	}
+	
+	
+	/**
+	 * https://leetcode.com/problems/reverse-integer/
+	 *  
+	 * @param num
+	 * @return
+	 */
+	public int reverse(int num) {
+        long sum = 0;
+        boolean isNegetive = false;
+         if(num == 0) {
+            return 0;
+        }
+        if(num < 0){
+            isNegetive = true;
+            num = -num;
+        }
+        while(num > 0){
+            sum = (sum * 10) + (num % 10);
+            num = num/10;
+        }
+        if(isNegetive){
+            sum = -sum;
+        }
+        if(sum > Integer.MAX_VALUE || sum < Integer.MIN_VALUE){
+            return 0;
+        }
+        return (int)sum;
+    }
 }

@@ -21,7 +21,7 @@ public class PermutationCombination {
 	public static void main(String[] args) {
 		int[] arr = new int[] { 1, 2, 3 };
 		PermutationCombination pc = new PermutationCombination();
-		System.out.println(pc.getAllSubsets("ABC"));
+		System.out.println(pc.getAllPermutations("ABC"));
 	}
 	
 	/**
@@ -60,17 +60,17 @@ public class PermutationCombination {
 	 */
 	public List<String> getValidPermutations(String str) {
 		List<String> list = new ArrayList<>();
-		validPermutations(list, str.toCharArray(), 0, str.length() - 1);
+		validPermutations(list, str.toCharArray(), 0);
 		return list;
 	}
 
-	private void validPermutations(List<String> list, char[] arr, int start, int end) {
-		if (start == end) {
+	private void validPermutations(List<String> list, char[] arr, int start) {
+		if (start == arr.length - 1) {
 			list.add(new String(arr));
 		} else {
-			for (int i = start; i <= end; i++) {
+			for (int i = start; i < arr.length; i++) {
 				swap(arr, start, i);
-				validPermutations(list, arr, start + 1, end);
+				validPermutations(list, arr, start + 1);
 				swap(arr, start, i);
 			}
 		}
@@ -105,7 +105,7 @@ public class PermutationCombination {
 
 	private void getValidPermutations1(List<String> list, String str, List<Character> tempList) {
 		if (tempList.size() == str.length()) {
-			StringBuilder builder = new StringBuilder(tempList.size());
+			StringBuilder builder = new StringBuilder();
 			for (Character ch : tempList) {
 				builder.append(ch);
 			}
@@ -162,17 +162,17 @@ public class PermutationCombination {
 	 */
 	public List<List<Integer>> permute1(int[] nums) {
 		List<List<Integer>> list = new ArrayList<>();
-		validPermutations1(list, nums, 0, nums.length - 1);
+		validPermutations1(list, nums, 0);
 		return list;
 	}
 
-	private void validPermutations1(List<List<Integer>> list, int[] nums, int start, int end) {
-		if (start == end) {
+	private void validPermutations1(List<List<Integer>> list, int[] nums, int start) {
+		if (start == nums.length - 1) {
 			list.add(Arrays.stream(nums).boxed().collect(Collectors.toList()));
 		} else {
-			for (int i = start; i <= end; i++) {
+			for (int i = start; i < nums.length; i++) {
 				swap(nums, start, i);
-				validPermutations1(list, nums, start + 1, end);
+				validPermutations1(list, nums, start + 1);
 				swap(nums, start, i);
 			}
 		}
@@ -193,22 +193,22 @@ public class PermutationCombination {
 	 */
 	public List<List<Integer>> permuteWithDuplicate(int[] nums) {
 		List<List<Integer>> list = new ArrayList<>();
-		Arrays.sort(nums);
-		validPermutations2(list, nums, 0, nums.length - 1);
+		Arrays.sort(nums); // Sorting required for duplicates
+		validPermutations2(list, nums, 0);
 		return list;
 	}
 
-	private void validPermutations2(List<List<Integer>> list, int[] nums, int start, int end) {
-		if (start == end) {
+	private void validPermutations2(List<List<Integer>> list, int[] nums, int start) {
+		if (start == nums.length - 1) {
 			// Not an efficient solution. O(n) is added for below line. Check below solution
 			list.add(IntStream.of(nums).boxed().collect(Collectors.toList()));
 		} else {
-			for (int i = start; i <= end; i++) {
+			for (int i = start; i < nums.length; i++) {
 				if (i > 0 && nums[i] == nums[i - 1]) {
 					continue;
 				}
 				swap(nums, start, i);
-				validPermutations2(list, nums, start + 1, end);
+				validPermutations2(list, nums, start + 1);
 				swap(nums, start, i);
 			}
 		}
