@@ -16,34 +16,34 @@ import dev.atanu.ds.java.linked.list.ListNode;
 public class ArraySolution {
 
 	public static void main(String[] args) {
-		int[] nums = new int[] { 17,12,10,2,7,2,11,20,8 };
+		int[] nums = new int[] { 17, 12, 10, 2, 7, 2, 11, 20, 8 };
 		ArraySolution solution = new ArraySolution();
-		System.out.println(solution.wordBreak("aaaaaaa", Arrays.asList("aaaa", "aaa")));
+		System.out.println(solution.longestValidParentheses("(()())(()()(("));
 	}
-	
+
 	/**
 	 * https://leetcode.com/problems/next-greater-element-i/
 	 * 
 	 * @param nums1
 	 * @param nums2
-	 * @return 
+	 * @return
 	 */
 	public int[] nextGreaterElement(int[] nums1, int[] nums2) {
-        int[] result = new int[nums1.length];
-        Stack<Integer> stack = new Stack<>();
-        Map<Integer, Integer> map = new HashMap<>();
-        
-        for (int i = 0; i < nums2.length; i++) {
-            while(!stack.isEmpty() && stack.peek() < nums2[i]) {
-                map.put(stack.pop(), nums2[i]);
-            }
-            stack.push(nums2[i]);
-        }
-        for(int j = 0; j < nums1.length; j++) {
-            result[j] = map.getOrDefault(nums1[j], -1);
-        }
-        return result;
-    }
+		int[] result = new int[nums1.length];
+		Stack<Integer> stack = new Stack<>();
+		Map<Integer, Integer> map = new HashMap<>();
+
+		for (int i = 0; i < nums2.length; i++) {
+			while (!stack.isEmpty() && stack.peek() < nums2[i]) {
+				map.put(stack.pop(), nums2[i]);
+			}
+			stack.push(nums2[i]);
+		}
+		for (int j = 0; j < nums1.length; j++) {
+			result[j] = map.getOrDefault(nums1[j], -1);
+		}
+		return result;
+	}
 
 	/**
 	 * {@link https://leetcode.com/problems/next-greater-element-ii/}
@@ -289,32 +289,32 @@ public class ArraySolution {
 	 * @return
 	 */
 	public int[] pivotArray(int[] nums, int pivot) {
-        int n = nums.length;
-        int[] arr = new int[n];
+		int n = nums.length;
+		int[] arr = new int[n];
 
-        int countOfPivot = 0, index = 0;
+		int countOfPivot = 0, index = 0;
 
-        for(int i = 0; i < n; i++) {
-            if(nums[i] < pivot) {
-                arr[index++] = nums[i];
-            } else if(nums[i] == pivot) {
-                countOfPivot++;
-            }
-        }
+		for (int i = 0; i < n; i++) {
+			if (nums[i] < pivot) {
+				arr[index++] = nums[i];
+			} else if (nums[i] == pivot) {
+				countOfPivot++;
+			}
+		}
 
-        for(int i = 1; i <= countOfPivot; i++) {
-            arr[index++] = pivot;
-        }
+		for (int i = 1; i <= countOfPivot; i++) {
+			arr[index++] = pivot;
+		}
 
-        for(int i = 0; i < n; i++) {
-            if(nums[i] > pivot) {
-                arr[index++] = nums[i];
-            }
-        }
+		for (int i = 0; i < n; i++) {
+			if (nums[i] > pivot) {
+				arr[index++] = nums[i];
+			}
+		}
 
-        return arr;
-    }
-	
+		return arr;
+	}
+
 	/**
 	 * https://leetcode.com/problems/find-all-duplicates-in-an-array/
 	 * 
@@ -351,7 +351,6 @@ public class ArraySolution {
 		}
 		return res;
 	}
-
 
 	/**
 	 * https://leetcode.com/problems/unique-email-addresses/
@@ -957,7 +956,7 @@ public class ArraySolution {
 
 		return primeList.size();
 	}
-	
+
 	/**
 	 * https://leetcode.com/problems/find-the-winner-of-the-circular-game/
 	 * 
@@ -966,52 +965,51 @@ public class ArraySolution {
 	 * @return
 	 */
 	public int findTheWinner(int n, int k) {
-        boolean[] arr = new boolean[n];
-        for(int i = 0; i < n; i++) {
-            arr[i] = true;
-        }
-        int index = 0, loopCount = n;
-        while(loopCount > 1) {
-            int j = 1;
-            while(j < k) {
-            	index++;
-                index %= n;
-                if(arr[index]) {
-                    j++;
-                }
-            }
-            arr[index] = false;
-            
-            while(!arr[index]) {
-            	index++;
-                index %= n;
-            }
-            
-            loopCount--;
-        }
+		boolean[] arr = new boolean[n];
+		for (int i = 0; i < n; i++) {
+			arr[i] = true;
+		}
+		int index = 0, loopCount = n;
+		while (loopCount > 1) {
+			int j = 1;
+			while (j < k) {
+				index++;
+				index %= n;
+				if (arr[index]) {
+					j++;
+				}
+			}
+			arr[index] = false;
 
-        int idx = 0;
-        for(int i = 0; i < n; i++) {
-            if(arr[i]) {
-                idx = i;
-                break;
-            }
-        }
-        return idx + 1;
-    }
-	
-	
+			while (!arr[index]) {
+				index++;
+				index %= n;
+			}
+
+			loopCount--;
+		}
+
+		int idx = 0;
+		for (int i = 0; i < n; i++) {
+			if (arr[i]) {
+				idx = i;
+				break;
+			}
+		}
+		return idx + 1;
+	}
+
 	/**
-     * https://leetcode.com/problems/maximum-product-subarray/
-     * 
-     * @param nums
-     * @return
-     */
+	 * https://leetcode.com/problems/maximum-product-subarray/
+	 * 
+	 * @param nums
+	 * @return
+	 */
 	public int maxProduct(int[] nums) {
 		int n = nums.length;
 		int result = nums[0];
 		int left = 0, right = 0;
-		
+
 		for (int i = 0; i < n; i++) {
 			left = (left == 0 ? 1 : left) * nums[i];
 			right = (right == 0 ? 1 : right) * nums[n - 1 - i];
@@ -1019,8 +1017,7 @@ public class ArraySolution {
 		}
 		return result;
 	}
-	
-	
+
 	/**
 	 * https://leetcode.com/problems/3sum/
 	 * 
@@ -1028,34 +1025,33 @@ public class ArraySolution {
 	 * @return
 	 */
 	public List<List<Integer>> threeSum(int[] nums) {
-        Arrays.sort(nums);
-        int n = nums.length;
-        Set<List<Integer>> set = new HashSet<>();
-        for(int i = 0; i < n - 1; i++) {
-            Map<Integer, Integer> map = new HashMap<>();
-            int sum = 0 - nums[i];
-            for(int j = i + 1; j < n; j++) {
-                if(!map.containsKey(sum - nums[j])) {
-                    map.put(nums[j], j);
-                } else {
-                    int k = map.get(sum - nums[j]);
-                    List<Integer> list = new ArrayList<>();
-                    list.add(nums[i]);
-                    if(nums[j] < nums[k]) {
-                        list.add(nums[j]);
-                        list.add(nums[k]);
-                    } else {
-                        list.add(nums[k]);
-                        list.add(nums[j]);
-                    }
-                    set.add(list);
-                }
-            }
-        }
-        return set.stream().collect(Collectors.toList());
+		Arrays.sort(nums);
+		int n = nums.length;
+		Set<List<Integer>> set = new HashSet<>();
+		for (int i = 0; i < n - 1; i++) {
+			Map<Integer, Integer> map = new HashMap<>();
+			int sum = 0 - nums[i];
+			for (int j = i + 1; j < n; j++) {
+				if (!map.containsKey(sum - nums[j])) {
+					map.put(nums[j], j);
+				} else {
+					int k = map.get(sum - nums[j]);
+					List<Integer> list = new ArrayList<>();
+					list.add(nums[i]);
+					if (nums[j] < nums[k]) {
+						list.add(nums[j]);
+						list.add(nums[k]);
+					} else {
+						list.add(nums[k]);
+						list.add(nums[j]);
+					}
+					set.add(list);
+				}
+			}
+		}
+		return set.stream().collect(Collectors.toList());
 	}
-	
-	
+
 	/**
 	 * https://leetcode.com/problems/valid-triangle-number/
 	 * 
@@ -1079,8 +1075,7 @@ public class ArraySolution {
 		}
 		return count;
 	}
-	
-	
+
 	/**
 	 * https://leetcode.com/problems/minimum-path-sum
 	 * 
@@ -1088,146 +1083,186 @@ public class ArraySolution {
 	 * @return
 	 */
 	public int minPathSum(int[][] grid) {
-        int m = grid.length;
-        int n = grid[0].length;
-        int[][] dp = new int[m + 1][n + 1];
-		for(int i = 0; i <= m; i++) {
-			for(int j = 0; j <= n; j++) {
+		int m = grid.length;
+		int n = grid[0].length;
+		int[][] dp = new int[m + 1][n + 1];
+		for (int i = 0; i <= m; i++) {
+			for (int j = 0; j <= n; j++) {
 				dp[i][j] = -1;
 			}
 		}
-        return minPathSum(dp, grid, m - 1, n - 1);
-    }
+		return minPathSum(dp, grid, m - 1, n - 1);
+	}
 
-    private int minPathSum(int[][] dp, int[][] grid, int row, int col) {
-        if(row == 0 && col == 0) {
-            return grid[row][col];
-        }
-        if(dp[row][col] != -1) {
-        	return dp[row][col];
-        }
+	private int minPathSum(int[][] dp, int[][] grid, int row, int col) {
+		if (row == 0 && col == 0) {
+			return grid[row][col];
+		}
+		if (dp[row][col] != -1) {
+			return dp[row][col];
+		}
 
-        if(row == 0) {
-            dp[row][col] = grid[row][col] + minPathSum(dp, grid, row, col - 1); 
-        } else if(col == 0) {
-            dp[row][col] = grid[row][col] + minPathSum(dp, grid, row - 1, col);
-        } else {
-            dp[row][col] = grid[row][col] + Math.min(minPathSum(dp, grid, row, col - 1),
-                    minPathSum(dp, grid, row - 1, col));
-        }
-        return dp[row][col];
-    }
-    
-    
-    /**
-     * https://leetcode.com/problems/total-cost-to-hire-k-workers/
-     * 
-     * @param costs
-     * @param k
-     * @param candidates
-     * @return
-     */
-    public long totalCost(int[] costs, int k, int candidates) {
-        int sum = 0;
-        if(costs.length < k) {
-            for(int i = 0; i < costs.length; i++) {
-                sum += costs[i];
-            }
-            return sum;
-        }
-        
-        PriorityQueue<Integer> start = new PriorityQueue<>();
-        PriorityQueue<Integer> end = new PriorityQueue<>();
-        int left = 0, right = costs.length - 1;
-        
-        while(left <= right) {
-            if(start.size() < candidates) {
-                start.offer(costs[left++]);
-            } else if(end.size() < candidates) {
-                end.offer(costs[right--]);
-            } else if(start.size() == end.size() && start.size() == candidates) {
-                if(k > 0) {
-                    if(start.peek() == end.peek() || start.peek() < end.peek()) {
-                        sum += start.poll();
-                    } else {
-                        sum += end.poll();
-                    }
-                    k--;
-                } else {
-                    return sum;
-                }
-            }
-        }
+		if (row == 0) {
+			dp[row][col] = grid[row][col] + minPathSum(dp, grid, row, col - 1);
+		} else if (col == 0) {
+			dp[row][col] = grid[row][col] + minPathSum(dp, grid, row - 1, col);
+		} else {
+			dp[row][col] = grid[row][col]
+					+ Math.min(minPathSum(dp, grid, row, col - 1), minPathSum(dp, grid, row - 1, col));
+		}
+		return dp[row][col];
+	}
 
-        while(k > 0) {
-            if(start.size() > 0 && end.size() > 0) {
-                if(start.peek() == end.peek() || start.peek() < end.peek()) {
-                    sum += start.poll();
-                } else {
-                    sum += end.poll();
-                }
-            } else if(start.size() > 0) {
-                sum += start.poll();
-            } else {
-                sum += end.poll();
-            }
-            k--;
-        }
+	/**
+	 * https://leetcode.com/problems/total-cost-to-hire-k-workers/
+	 * 
+	 * @param costs
+	 * @param k
+	 * @param candidates
+	 * @return
+	 */
+	public long totalCost(int[] costs, int k, int candidates) {
+		int sum = 0;
+		if (costs.length < k) {
+			for (int i = 0; i < costs.length; i++) {
+				sum += costs[i];
+			}
+			return sum;
+		}
 
-        return sum;
-    }
-    
-    
-    /**
+		PriorityQueue<Integer> start = new PriorityQueue<>();
+		PriorityQueue<Integer> end = new PriorityQueue<>();
+		int left = 0, right = costs.length - 1;
+
+		while (left <= right) {
+			if (start.size() < candidates) {
+				start.offer(costs[left++]);
+			} else if (end.size() < candidates) {
+				end.offer(costs[right--]);
+			} else if (start.size() == end.size() && start.size() == candidates) {
+				if (k > 0) {
+					if (start.peek() == end.peek() || start.peek() < end.peek()) {
+						sum += start.poll();
+					} else {
+						sum += end.poll();
+					}
+					k--;
+				} else {
+					return sum;
+				}
+			}
+		}
+
+		while (k > 0) {
+			if (start.size() > 0 && end.size() > 0) {
+				if (start.peek() == end.peek() || start.peek() < end.peek()) {
+					sum += start.poll();
+				} else {
+					sum += end.poll();
+				}
+			} else if (start.size() > 0) {
+				sum += start.poll();
+			} else {
+				sum += end.poll();
+			}
+			k--;
+		}
+
+		return sum;
+	}
+
+	/**
 	 * https://leetcode.com/problems/longest-substring-without-repeating-characters/
 	 * 
 	 * @param s
 	 * @return
 	 */
 	public int lengthOfLongestSubstring(String s) {
-        if (s.length() == 0) 
-            return 0;
-        HashMap<Character, Integer> map = new HashMap<Character, Integer>();
-        int max=0;
-        for (int i=0, j=0; i<s.length(); ++i){
-            if (map.containsKey(s.charAt(i))){
-                j = Math.max(j,map.get(s.charAt(i))+1);
-            }
-            map.put(s.charAt(i),i);
-            max = Math.max(max,i-j+1);
-        }
-        return max;
-    }
-	
-	
+		if (s.length() == 0)
+			return 0;
+		HashMap<Character, Integer> map = new HashMap<Character, Integer>();
+		int max = 0;
+		for (int i = 0, j = 0; i < s.length(); ++i) {
+			if (map.containsKey(s.charAt(i))) {
+				j = Math.max(j, map.get(s.charAt(i)) + 1);
+			}
+			map.put(s.charAt(i), i);
+			max = Math.max(max, i - j + 1);
+		}
+		return max;
+	}
+
 	/**
 	 * https://leetcode.com/problems/word-break/
+	 * 
 	 * @param s
 	 * @param wordDict
 	 * @return
 	 */
 	public boolean wordBreak(String s, List<String> wordDict) {
-        Set<String> set = wordDict.stream().collect(Collectors.toSet());
-        StringBuffer sb = new StringBuffer();
-        
-        for(int i = 0; i < s.length(); i++) {
-            sb.append(s.charAt(i));
-            if(set.contains(sb.toString())) {
-            	set.remove(sb.toString());
-                sb.setLength(0);
-            }
-        }
-        return sb.length() == 0;
-    }
-	
-    
-    /**
-     * https://pencilprogrammer.com/java-programs/tower-of-hanoi/
-     * https://www.geeksforgeeks.org/c-program-for-tower-of-hanoi/
-     * 
-     * Tower of hanoi problem
-     * @param n
-     */
+		Set<String> set = wordDict.stream().collect(Collectors.toSet());
+		StringBuffer sb = new StringBuffer();
+
+		for (int i = 0; i < s.length(); i++) {
+			sb.append(s.charAt(i));
+			if (set.contains(sb.toString())) {
+				set.remove(sb.toString());
+				sb.setLength(0);
+			}
+		}
+		return sb.length() == 0;
+	}
+
+	/**
+	 * https://leetcode.com/problems/longest-valid-parentheses/
+	 * 
+	 * @param s
+	 * @return
+	 */
+	public int longestValidParentheses(String s) {
+		Stack<Integer> stack = new Stack<>();
+		int n = s.length();
+
+		for (int i = 0; i < n; i++) {
+			if (s.charAt(i) == '(') {
+				stack.push(i);
+			} else {
+				if (!stack.isEmpty() && s.charAt(stack.peek()) == '(') {
+					stack.pop();
+				} else {
+					stack.push(i);
+				}
+			}
+		}
+
+		if (stack.isEmpty()) {
+			return n;
+		}
+
+		// Now the stack contain the indices of characters which cannot be matched
+
+		int endIndex = n - 1;
+		int maxLen = 0;
+		while (!stack.isEmpty()) {
+			int startIndex = stack.pop();
+			maxLen = Math.max(maxLen, endIndex - startIndex);
+			endIndex = startIndex;
+		}
+
+		// check the last index as well if it is longest
+		maxLen = Math.max(maxLen, endIndex);
+
+		return maxLen;
+	}
+
+	/**
+	 * https://pencilprogrammer.com/java-programs/tower-of-hanoi/
+	 * https://www.geeksforgeeks.org/c-program-for-tower-of-hanoi/
+	 * 
+	 * Tower of hanoi problem
+	 * 
+	 * @param n
+	 */
 	public void towerOfHanoi(int n) {
 		long begin = System.currentTimeMillis();
 		towerOfHanoi(n, "A", "B", "C");
@@ -1250,5 +1285,5 @@ public class ArraySolution {
 		// Move n-1 disks from B to C using A as middle
 		towerOfHanoi(n - 1, middleRod, fromRod, toRod);
 	}
-    
+
 }
