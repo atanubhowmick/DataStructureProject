@@ -65,7 +65,7 @@ public class PermutationCombination {
 	}
 
 	private void validPermutations(List<String> list, char[] arr, int start) {
-		if (start == arr.length - 1) {
+		if (start == arr.length) {
 			list.add(new String(arr));
 		} else {
 			for (int i = start; i < arr.length; i++) {
