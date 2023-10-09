@@ -18,7 +18,7 @@ public class ArraySolution {
 	public static void main(String[] args) {
 		int[] nums = new int[] { 17, 12, 10, 2, 7, 2, 11, 20, 8 };
 		ArraySolution solution = new ArraySolution();
-		System.out.println(solution.longestValidParentheses("(()())(()()(("));
+		System.out.println(solution.camelMatch(new String[] {"FooBar","FooBarTest","FootBall","FrameBuffer","ForceFeedBack"}, "FB"));
 	}
 
 	/**
@@ -581,6 +581,48 @@ public class ArraySolution {
 		}
 		return right - left - 1;
 	}
+	
+	
+	/**
+	 * https://leetcode.com/problems/longest-palindrome-by-concatenating-two-letter-words/
+	 * 
+	 * @param words
+	 * @return
+	 */
+	public int longestPalindrome(String[] words) {
+        int len = 0;
+        Map<String, Integer> map = new HashMap<>();
+        for(String word : words) {
+            String key = new StringBuffer(word).reverse().toString();
+            int count = map.getOrDefault(key, 0);
+            if(word.charAt(0) == word.charAt(1)) {
+               map.put(word, count + 1);
+            } else if(count > 0) {
+                len += 4;
+                map.put(key, count - 1);
+            } else {
+                map.put(word, map.getOrDefault(word, 0) + 1);
+            }
+        }
+
+        boolean hasOddCount = false;
+
+        for(Map.Entry<String, Integer> entry : map.entrySet()) {
+            String word = entry.getKey();
+            int count  = entry.getValue();
+            if(word.charAt(0) == word.charAt(1)) {
+                if(count % 2 == 0) {
+                    len += count * 2;
+                } else {
+                    len += (count - 1) * 2;
+                    hasOddCount = true;
+                }
+            }
+        }
+
+        return len + (hasOddCount ? 2 : 0);
+    }
+	
 
 	/**
 	 * https://leetcode.com/problems/pancake-sorting/
@@ -1254,6 +1296,47 @@ public class ArraySolution {
 
 		return maxLen;
 	}
+	
+	
+	/**
+	 * https://leetcode.com/problems/camelcase-matching/
+	 * 
+	 * @param queries
+	 * @param pattern
+	 * @return
+	 */
+	public List<Boolean> camelMatch(String[] queries, String pattern) {
+        List<Boolean> result = new ArrayList<>();
+        for(String str : queries) {
+            result.add(matchCamelCase(str, pattern));
+        }
+        return result;
+    }
+
+    private boolean matchCamelCase(String word, String pattern) {
+        int patternIdx = 0, wordIdx = 0;
+
+        while(patternIdx < pattern.length() && wordIdx < word.length()) {
+            if(pattern.charAt(patternIdx++) != word.charAt(wordIdx++)) {
+                return false;
+            }
+
+            while(patternIdx < pattern.length() && pattern.charAt(patternIdx) >= 97
+                    && pattern.charAt(patternIdx) <= 122) {
+                if(pattern.charAt(patternIdx++) != word.charAt(wordIdx++)) {
+                    return false;
+                }
+            }
+
+            while(wordIdx < word.length() && word.charAt(wordIdx) >= 97
+                    && word.charAt(wordIdx) <= 122) {
+                wordIdx++;
+            }
+            
+        }
+        return patternIdx == pattern.length() && wordIdx == word.length();
+    }
+	
 
 	/**
 	 * https://pencilprogrammer.com/java-programs/tower-of-hanoi/

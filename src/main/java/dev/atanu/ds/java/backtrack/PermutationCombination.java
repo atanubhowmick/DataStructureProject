@@ -19,9 +19,10 @@ public class PermutationCombination {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		int[] arr = new int[] { 1, 2, 3 };
+		int[] arr = new int[] { 1, 2, 3, 6, 4 };
 		PermutationCombination pc = new PermutationCombination();
-		System.out.println(pc.getAllPermutations("ABC"));
+		pc.nextPermutation(arr);
+		System.out.println(pc.getMinSwaps(arr, 2));
 	}
 	
 	/**
@@ -630,4 +631,182 @@ public class PermutationCombination {
 			tempList.remove(tempList.size() - 1);
 		}
 	}
+	
+	
+	/**
+	 * Find the next permutation
+	 * <br>
+	 * https://www.geeksforgeeks.org/next-permutation/
+	 *  
+	 * @param arr
+	 */
+	public void nextPermutation(int[] arr) {
+		int n = arr.length, i, j;
+
+		// Find for the pivot element. A pivot is the first element from end
+		// of sequence which doesn't follow property of non-increasing suffix
+		for (i = n - 2; i >= 0; i--) {
+			if (arr[i] < arr[i + 1]) {
+				break;
+			}
+		}
+
+		// Check if pivot is found
+		if (i < 0) {
+			// If pivot not found then reverse the array.
+			reverse(arr, 0, arr.length - 1);
+		} else {
+			// If pivot is not found
+			// Find for the successor of pivot in suffix
+			for (j = n - 1; j > i; j--) {
+				if (arr[j] > arr[i]) {
+					break;
+				}
+			}
+
+			// Swap the pivot and successor
+			swap(arr, i, j);
+
+			// Minimize the suffix part
+			reverse(arr, i + 1, arr.length - 1);
+		}
+	}
+
+	private void reverse(int[] arr, int start, int end) {
+		while (start < end) {
+			swap(arr, start, end);
+			start++;
+			end--;
+		}
+	}
+	
+	
+	/**
+	 * https://leetcode.com/problems/minimum-adjacent-swaps-to-reach-the-kth-smallest-number/
+	 * 
+	 * @param num
+	 * @param k
+	 * @return
+	 */
+	public int getMinSwaps(int[] nums, int k) {
+		int n = nums.length;
+		int[] arr = new int[n];
+		for(int i = 0; i < n; i++) {
+			arr[i] = nums[i];
+		}
+		
+		for(int i = 1; i <= k; i++) {
+			nextPermutation(arr);
+		}
+		
+		return countSteps(nums, arr, n);
+    }
+	
+	
+	/**
+	 * https://leetcode.com/problems/minimum-adjacent-swaps-to-reach-the-kth-smallest-number/
+	 * 
+	 * @param s1
+	 * @param s2
+	 * @param size
+	 * @return
+	 */
+	private int countSteps(int[] s1, int[] s2, int size) {
+        int i = 0, j = 0;
+        int count = 0;
+
+        while (i < size) {
+            j = i;
+
+            while (s1[j] != s2[i]) {
+                j += 1;
+            }
+            
+            while (i < j) {
+                swap(s1, j, j - 1);
+                j -= 1;
+                count++;
+            }
+            i++;
+        }
+        return count;
+    }
+	
+	
+	/**
+	 * https://leetcode.com/problems/minimum-adjacent-swaps-to-reach-the-kth-smallest-number/
+	 * 
+	 * @param num
+	 * @param k
+	 * @return
+	 */
+	public int getMinSwaps(String num, int k) {
+        char[] arr = num.toCharArray();
+        for(int i = 1; i <= k; i++) {
+            nextPermutation(arr);
+        }
+
+        return countSteps(num.toCharArray(), arr, num.length());
+    }
+
+    private void nextPermutation(char[] arr) {
+		int n = arr.length, i, j;
+
+		// Find for the pivot element. A pivot is the first element from end
+		// of sequence which doesn't follow property of non-increasing suffix
+		for (i = n - 2; i >= 0; i--) {
+			if (arr[i] < arr[i + 1]) {
+				break;
+			}
+		}
+
+		// Check if pivot is found
+		if (i < 0) {
+			// If pivot not found then reverse the array.
+			reverse(arr, 0, arr.length - 1);
+		} else {
+			// If pivot is not found
+			// Find for the successor of pivot in suffix
+			for (j = n - 1; j > i; j--) {
+				if (arr[j] > arr[i]) {
+					break;
+				}
+			}
+
+			// Swap the pivot and successor
+			swap(arr, i, j);
+
+			// Minimize the suffix part
+			reverse(arr, i + 1, arr.length - 1);
+		}
+	}
+
+	private void reverse(char[] arr, int start, int end) {
+		while (start < end) {
+			swap(arr, start, end);
+			start++;
+			end--;
+		}
+	}
+
+    private int countSteps(char[] s1, char[] s2, int size) {
+        int i = 0, j = 0;
+        int count = 0;
+
+        while (i < size) {
+            j = i;
+
+            while (s1[j] != s2[i]) {
+                j += 1;
+            }
+            
+            while (i < j) {
+                swap(s1, j, j - 1);
+                j -= 1;
+                count++;
+            }
+            i++;
+        }
+        return count;
+    }
 }

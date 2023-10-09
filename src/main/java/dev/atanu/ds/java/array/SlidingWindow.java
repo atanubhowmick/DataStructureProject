@@ -22,6 +22,7 @@ public class SlidingWindow {
 		int[] arr = new int[] { 0, 1, 1, 1, 0, 1, 1, 0, 1 };
 		System.out.println(slidingWindow.characterReplacement("KKKKKKJJJJ", 2));
 	}
+	
 
 	/**
 	 * https://leetcode.com/problems/minimum-size-subarray-sum/
@@ -43,17 +44,40 @@ public class SlidingWindow {
 		}
 		return len == n + 1 ? 0 : len;
 	}
+	
 
 	/**
-	 * https://leetcode.com/problems/longest-subarray-of-1s-after-deleting-one-element/
+	 * https://leetcode.com/problems/max-consecutive-ones/
 	 * 
 	 * @param nums
 	 * @return
 	 */
-	public int longestSubarray(int[] nums) {
-		int i = 0, k = 1;
-		int maxLen = 0;
-		for (int j = 0; j < nums.length; j++) {
+	public int findMaxConsecutiveOnes(int[] nums) {
+		int count = 0, maxCount = 0;
+
+		for (int i = 0; i < nums.length; i++) {
+			if (nums[i] == 1) {
+				count += 1;
+				maxCount = Math.max(count, maxCount);
+			} else {
+				count = 0;
+			}
+		}
+
+		return maxCount;
+	}
+
+	
+	/**
+	 * https://leetcode.com/problems/max-consecutive-ones-iii/
+	 * 
+	 * @param nums
+	 * @param k
+	 * @return
+	 */
+	public int longestOnes(int[] nums, int k) {
+		int i = 0, j;
+		for (j = 0; j < nums.length; ++j) {
 			if (nums[j] == 0) {
 				k--;
 			}
@@ -63,11 +87,34 @@ public class SlidingWindow {
 				}
 				i++;
 			}
-			maxLen = Math.max(maxLen, j - i);
 		}
-		return maxLen;
+		return j - i;
+	}
+	
+
+	/**
+	 * https://leetcode.com/problems/longest-subarray-of-1s-after-deleting-one-element/
+	 * 
+	 * @param nums
+	 * @return
+	 */
+	public int longestSubarray(int[] nums) {
+		int i = 0, j, k = 1;
+		for (j = 0; j < nums.length; ++j) {
+			if (nums[j] == 0) {
+				k--;
+			}
+			if (k < 0) {
+				if (nums[i] == 0) {
+					k++;
+				}
+				i++;
+			}
+		}
+		return j - i - 1;
 	}
 
+	
 	/**
 	 * https://leetcode.com/problems/arithmetic-slices/
 	 * 
@@ -87,6 +134,7 @@ public class SlidingWindow {
 
 		return count;
 	}
+	
 
 	/**
 	 * https://leetcode.com/problems/longest-substring-without-repeating-characters/
@@ -107,6 +155,7 @@ public class SlidingWindow {
 		}
 		return maxLen;
 	}
+	
 
 	/**
 	 * https://leetcode.com/problems/longest-repeating-character-replacement/
@@ -133,6 +182,7 @@ public class SlidingWindow {
 		}
 		return maxLen;
 	}
+	
 
 	/**
 	 * Two problems are same.
@@ -163,6 +213,7 @@ public class SlidingWindow {
 		return maxLen;
 	}
 
+	
 	/**
 	 * https://leetcode.com/problems/number-of-substrings-containing-all-three-characters/
 	 * 
@@ -191,6 +242,7 @@ public class SlidingWindow {
 		}
 		return count;
 	}
+	
 
 	/**
 	 * https://leetcode.com/problems/number-of-substrings-containing-all-three-characters/
@@ -201,7 +253,7 @@ public class SlidingWindow {
 	public int numberOfSubstrings1(String s) {
 		int count = 0, n = s.length();
 		int lastIdx[] = { -1, -1, -1 };
-		
+
 		for (int i = 0; i < n; ++i) {
 			lastIdx[s.charAt(i) - 'a'] = i;
 			int min = Math.min(lastIdx[0], Math.min(lastIdx[1], lastIdx[2]));
